@@ -233,7 +233,7 @@ public class BuildingGUI extends Application {
 	    stagePrimary.show();
 //	    final long startNanoTime = System.nanoTime();
 		// for animation, note start time
-	    scene.setCursor(Cursor.V_RESIZE);
+	    scene.setCursor(Cursor.WAIT);
 	    
 	    new AnimationTimer()			// create timer
 	    	{
