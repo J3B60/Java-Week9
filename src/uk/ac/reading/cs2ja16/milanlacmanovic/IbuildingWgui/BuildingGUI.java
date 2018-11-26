@@ -1,5 +1,6 @@
 package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 
+import javafx.scene.Cursor;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
@@ -232,7 +233,8 @@ public class BuildingGUI extends Application {
 	    stagePrimary.show();
 //	    final long startNanoTime = System.nanoTime();
 		// for animation, note start time
-
+	    scene.setCursor(Cursor.V_RESIZE);
+	    
 	    new AnimationTimer()			// create timer
 	    	{
 	    		public void handle(long currentNanoTime) {
