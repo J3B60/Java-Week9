@@ -20,7 +20,7 @@ import javax.swing.JOptionPane;
 
 public class BuildingInterface {
 	Scanner s;	//scanner used for input from user
-	private char[][] BuildingDraw; //Holds Drawn Building array for the console output
+	char[][] BuildingDraw; //Holds Drawn Building array for the console output
 	
 	Building myBuilding;//Building
 	/**
@@ -52,68 +52,68 @@ public class BuildingInterface {
 	 	* X exits the program
 	 */
 	public BuildingInterface() {
-		  s = new Scanner(System.in);	// set up scanner for user input
-	    int bno = 1;			// initially building 1 selected
-	
-	    myBuilding = new Building(buildingString(bno));// create building
-		
-	    char ch = ' ';
-	    do {
-	       	System.out.print("(N)ew buidling, (D)raw, (M)ove, (A)nimate, (P)ath, (U)ser Input New Building, (S)ave, (L)oad, (I)nfo, e(X)it > ");
-	    	ch = s.next().charAt(0);
-	    	s.nextLine();
-	    	switch (ch) {
-	   		case 'N' :
-	    		case 'n' :
-	    				bno = 3 - bno;  // change 1 to 2 or 2 to 1
-	    				myBuilding.setBuilding(buildingString(bno));
-	    				break;
-	    		case 'I' :
-	    		case 'i' :
-						System.out.print(myBuilding.toString());
-						break;
-	    		case 'D' :
-	    		case 'd' :
-		    			System.out.println(doDisplay());
-		    			break;
-	    		case 'M' :
-	    		case 'm' ://Moves person step by step and to default first position from the task sheet which is the rooms door, can easily be changed to do whole path - would just need to go back t person class
-	    				doDisplay(); //Cheap way to get the map out ready for person to use Without Feedback
-		    			myBuilding.movePersoninBuilding(this);
-		    			break;
-	    		case 'A' :
-	    		case 'a' ://Moves person point by point in path
-	    				doDisplay();//Same reason as M
-		    			if (!myBuilding.PersonCompletePath()) {//Animate if not at final
-		    				animate();
-		    			}
-		    			break;
-	    		case 'P' :
-	    		case 'p' ://Animates from start to finish
-	    				doDisplay(); //Same reason as M
-	    				while(!myBuilding.PersonCompletePath()) {//Animate while not final
-	    					animate();
-	    				}
-	    				break;
-	    		case 'U' :
-	    		case 'u' :
-	    				myBuilding = new Building(UserInputBuilding());//Make new building using user input
-	    			break;
-	    		case 'S':
-	    		case 's':
-	    				SaveFile();//Saves
-	    			break;
-	    		case 'L':
-	    		case 'l':
-	    				myBuilding = new Building(LoadFile());//Make new building using load
-	    			break;
-	     		case 'x' : 	ch = 'X';	// when X detected program ends
-	    				break;
-		 
-	    	}
-		} while (ch != 'X');			// test if end
-	
-	   s.close();					// close scanner
+//		  s = new Scanner(System.in);	// set up scanner for user input
+//	    int bno = 1;			// initially building 1 selected
+//	
+//	    myBuilding = new Building(buildingString(bno));// create building
+//		
+//	    char ch = ' ';
+//	    do {
+//	       	System.out.print("(N)ew buidling, (D)raw, (M)ove, (A)nimate, (P)ath, (U)ser Input New Building, (S)ave, (L)oad, (I)nfo, e(X)it > ");
+//	    	ch = s.next().charAt(0);
+//	    	s.nextLine();
+//	    	switch (ch) {
+//	   		case 'N' :
+//	    		case 'n' :
+//	    				bno = 3 - bno;  // change 1 to 2 or 2 to 1
+//	    				myBuilding.setBuilding(buildingString(bno));
+//	    				break;
+//	    		case 'I' :
+//	    		case 'i' :
+//						System.out.print(myBuilding.toString());
+//						break;
+//	    		case 'D' :
+//	    		case 'd' :
+//		    			System.out.println(doDisplay());
+//		    			break;
+//	    		case 'M' :
+//	    		case 'm' ://Moves person step by step and to default first position from the task sheet which is the rooms door, can easily be changed to do whole path - would just need to go back t person class
+//	    				doDisplay(); //Cheap way to get the map out ready for person to use Without Feedback
+//		    			myBuilding.movePersoninBuilding(this);
+//		    			break;
+//	    		case 'A' :
+//	    		case 'a' ://Moves person point by point in path
+//	    				doDisplay();//Same reason as M
+//		    			if (!myBuilding.PersonCompletePath()) {//Animate if not at final
+//		    				animate();
+//		    			}
+//		    			break;
+//	    		case 'P' :
+//	    		case 'p' ://Animates from start to finish
+//	    				doDisplay(); //Same reason as M
+//	    				while(!myBuilding.PersonCompletePath()) {//Animate while not final
+//	    					animate();
+//	    				}
+//	    				break;
+//	    		case 'U' :
+//	    		case 'u' :
+//	    				myBuilding = new Building(UserInputBuilding());//Make new building using user input
+//	    			break;
+//	    		case 'S':
+//	    		case 's':
+//	    				SaveFile();//Saves
+//	    			break;
+//	    		case 'L':
+//	    		case 'l':
+//	    				myBuilding = new Building(LoadFile());//Make new building using load
+//	    			break;
+//	     		case 'x' : 	ch = 'X';	// when X detected program ends
+//	    				break;
+//		 
+//	    	}
+//		} while (ch != 'X');			// test if end
+//	
+//	   s.close();					// close scanner
 	}
 	
 	/**

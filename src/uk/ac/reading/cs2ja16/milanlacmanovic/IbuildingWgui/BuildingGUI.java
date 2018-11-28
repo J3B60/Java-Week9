@@ -25,6 +25,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Paint;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
 
 public class BuildingGUI extends Application {
@@ -35,9 +37,8 @@ public class BuildingGUI extends Application {
     private HBox btPane;
     private boolean SetAnimationRun = true;
     private Random rgen = new Random();
+    BuildingInterface bi = new BuildingInterface();
 
-    double sunPosx = canvasSize/2;
-    double sunPosy = canvasSize/2;
     long startNanoTime = System.nanoTime();
     /**
      * drawIt ... draws object defined by given image at position and size
@@ -62,13 +63,13 @@ public class BuildingGUI extends Application {
  * function to show in a box ABout the programme
  */
  private void showAbout() {
-	 showMessage("About", "Solar System with Mars and Earth");
+	 showMessage("About", "Intelligent Building demo by Milan Lacmanovic");
  }
     /**
 	 * function to show in a box ABout the programme
 	 */
 	 private void showHelp() {
-		 showMessage("Help", "Start to start animation, Pause to pause animation");
+		 showMessage("Help", "TODO once all options from 'bi' class added");
 	 }
  
 	
@@ -96,15 +97,63 @@ public class BuildingGUI extends Application {
 		
 				// now add File menu, which here only has Exit
 		Menu mFile = new Menu("File");
+		MenuItem mNew = new MenuItem("New");
+		mNew.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	bi.UserInputBuilding();
+		    }
+		});
+		MenuItem mOpen = new MenuItem("Open");
+		mOpen.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		        bi.myBuilding = new Building(bi.LoadFile());
+		    }
+		});
+		MenuItem mSave = new MenuItem("Save");
+		mSave.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		        bi.SaveFile();
+		    }
+		});
 		MenuItem mExit = new MenuItem("Exit");
 		mExit.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
 		        System.exit(0);						// quit program
 		    }
 		});
-		mFile.getItems().addAll(mExit);
+		mFile.getItems().addAll(mNew, mOpen, mSave, mExit);
 		
-		menuBar.getMenus().addAll(mFile, mHelp);	// menu has File and Help
+		Menu mView = new Menu("View");
+		MenuItem mGraph = new MenuItem("Graph");
+		MenuItem mBuilding = new MenuItem("Building");
+		MenuItem mtoFit = new MenuItem("Fit to Screen");
+		mBuilding.setDisable(true);
+		mGraph.setDisable(false);
+		mBuilding.setDisable(false);
+		mGraph.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	//TODO graph FUNCTION goes Here
+		    	mBuilding.setDisable(false);
+		    	mtoFit.setDisable(true);
+		    	mGraph.setDisable(true);
+		    }
+		});
+		mBuilding.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	//TODO return to Building view FUNCTION goes Here
+		    	mBuilding.setDisable(true);
+		    	mtoFit.setDisable(false);
+		    	mGraph.setDisable(false);
+		    }
+		});
+		mtoFit.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	BuildingtoFit();
+		    }
+		});
+		mView.getItems().addAll(mBuilding, mGraph, mtoFit);
+		
+		menuBar.getMenus().addAll(mFile, mView, mHelp);	// menu has File and Help
 		
 		return menuBar;					// return the menu, so can be added
 	}
@@ -215,7 +264,8 @@ public class BuildingGUI extends Application {
 	    holder.getChildren().add(canvas);
 	    root.getChildren().add( holder );			// add to root and hence stage
 	   
-	    holder.setStyle("-fx-background-color: green");
+	    
+	    holder.setStyle("-fx-background-color: #428700");
 	    gc = canvas.getGraphicsContext2D();
 	    setMouseEvents(canvas);
 	    bp.setCenter(root);
@@ -234,7 +284,7 @@ public class BuildingGUI extends Application {
 //	    final long startNanoTime = System.nanoTime();
 		// for animation, note start time
 	    scene.setCursor(Cursor.WAIT);
-	    
+	    drawLines(gc); //Draw Lines Test
 	    new AnimationTimer()			// create timer
 	    	{
 	    		public void handle(long currentNanoTime) {
@@ -250,6 +300,46 @@ public class BuildingGUI extends Application {
 	    	}.start();					// start it
 	    
 		stagePrimary.show();
+	}
+	
+	private void BuildingtoFit() {
+		int ratio = 0;
+		ratio = bi.getBuildingDraw().length;
+		if (ratio < bi.getBuildingDraw()[0].length) ratio = bi.getBuildingDraw()[0].length;
+		ratio = canvasSize/ratio; //Ratio is optimal size to show all of building in canvas at once
+	}
+	
+	private void drawLines(GraphicsContext gc) {
+//		gc.setFill(Color.BLUE);
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(5);
+//        gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
+        gc.strokeLine(10, 10, 10, 40);
+        for (int i = 0; i < bi.getBuildingDraw().length; i++) {
+        	for (int j = 0; j < bi.getBuildingDraw()[i].length; j++) {
+        		if (bi.getBuildingDraw()[i][j] == '|') {
+        			gc.strokeLine(10, 10, 10, 40);///TODO set using ij and ratio from buildingtoFit
+        		}
+        		else if (bi.getBuildingDraw()[i][j] == '-') {
+        			gc.strokeLine(10, 10, 10, 40);///TODO set using ij and ratio from buildingtoFit
+        		}
+        	}
+        }
+//        gc.fillOval(10, 60, 10, 10); //FROM an Example Online (maybe useful to refer back to in the future when drawing new stuff)
+//        gc.strokeOval(60, 60, 30, 30);
+//        gc.strokeRoundRect(160, 60, 30, 30, 10, 10);
+//        gc.fillArc(10, 110, 30, 30, 45, 240, ArcType.OPEN);
+//        gc.fillArc(60, 110, 30, 30, 45, 240, ArcType.CHORD);
+//        gc.fillArc(110, 110, 30, 30, 45, 240, ArcType.ROUND);
+//        gc.strokeArc(10, 160, 30, 30, 45, 240, ArcType.OPEN);
+//        gc.strokeArc(60, 160, 30, 30, 45, 240, ArcType.CHORD);
+//        gc.strokeArc(110, 160, 30, 30, 45, 240, ArcType.ROUND);
+//        gc.fillPolygon(new double[]{10, 40, 10, 40},
+//                       new double[]{210, 210, 240, 240}, 4);
+//        gc.strokePolygon(new double[]{60, 90, 60, 90},
+//                         new double[]{210, 210, 240, 240}, 4);
+//        gc.strokePolyline(new double[]{110, 140, 110, 140},
+//                          new double[]{210, 210, 240, 240}, 4);
 	}
 	
 	public int getCanvasSize(){
