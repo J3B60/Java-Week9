@@ -56,7 +56,7 @@ public class BuildingInterface {
 	    int bno = 1;			// initially building 1 selected
 	
 	    myBuilding = new Building(buildingString(bno));// create building
-	    doDisplay();//Pre draw building
+	    System.out.println(doDisplay());//Pre draw building
 		
 //	    char ch = ' ';
 //	    do {
@@ -149,6 +149,10 @@ public class BuildingInterface {
 	 * Places the # character to display the building boundaries in the Building Draw array.
 	 * This creates a box or rectangle with gaps in the center and endge of #
 	 */
+	
+	public String toString(){
+		return myBuilding.toString();
+	}
 	
 	public void showBuildingWall() {
 		Arrays.fill(BuildingDraw[0], '#'); //Fill top

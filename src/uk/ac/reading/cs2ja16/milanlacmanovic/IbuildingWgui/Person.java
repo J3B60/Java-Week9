@@ -95,6 +95,10 @@ public class Person {
 		bi.showIt((int)PersonPosition.getX(), (int)PersonPosition.getY(), 'P'); //(int) P.getX() is replaceable with getPersonPositionX() etc
 	}
 	
+	public void showPersonGUI(BuildingGUI bg){
+		bg.drawPerson((int)PersonPosition.getX(), (int)PersonPosition.getY());
+	}
+	
 	/**
 	 * Sets up the arraylist and sets the first point in the Persons Path by inputing a Point
 	 * @param p Point

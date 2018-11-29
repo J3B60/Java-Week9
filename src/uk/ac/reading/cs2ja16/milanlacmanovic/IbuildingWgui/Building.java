@@ -18,7 +18,7 @@ public class Building {
 	private ArrayList<Room> allRooms;	// array of rooms
 	private Random randGen;				//Random Generator using Random obj
 	private int randRoom;				//Random Room Number
-	private Person occupant;			//Person point P on BuildingDraw
+	public Person occupant;			//Person point P on BuildingDraw
 	private String OriginalInput; //Original input string for building Constructor to be able to call back for saveing in the building interface
 	
 	/**

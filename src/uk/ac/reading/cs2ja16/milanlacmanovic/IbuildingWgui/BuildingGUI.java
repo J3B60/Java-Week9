@@ -48,7 +48,8 @@ public class BuildingGUI extends Application {
      * @param sz
      */
 	public void drawIt () {
-		
+		drawLines(gc);
+		bi.myBuilding.occupant.showPersonGUI(this);
 	}
 	
 	private void showMessage(String TStr, String CStr) {
@@ -158,11 +159,11 @@ public class BuildingGUI extends Application {
 		return menuBar;					// return the menu, so can be added
 	}
 	
-	public void drawStatus(double sx, double sy, double ex, double ey, double mx, double my) {
+	public void drawStatus() {
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		Label l = new Label("Sun at " + String.format("%.1f", sx) + ", " + String.format("%.1f", sy) + "\n" + "Earth at " + String.format("%.1f", ex) + ", " + String.format("%.1f", ey) + "\n" + "Mars at " + String.format("%.1f", mx) + ", " + String.format("%.1f", my));
+		Label l = new Label(bi.toString());
 		rtPane.getChildren().add(l);				// add label to pane	
 	}
 	
@@ -265,7 +266,7 @@ public class BuildingGUI extends Application {
 	    root.getChildren().add( holder );			// add to root and hence stage
 	   
 	    
-	    holder.setStyle("-fx-background-color: #428700");
+	    holder.setStyle("-fx-background-color: lightgrey");
 	    gc = canvas.getGraphicsContext2D();
 	    setMouseEvents(canvas);
 	    bp.setCenter(root);
@@ -291,6 +292,8 @@ public class BuildingGUI extends Application {
 	    				// define handle for what do at this time
 	    			if (SetAnimationRun == true){
 	    				t = (currentNanoTime - startNanoTime) / 1000000000.0;
+	    				drawIt();
+	    				drawStatus();
 	    				//#############################################
 	    			}
 	    			else{
@@ -310,6 +313,16 @@ public class BuildingGUI extends Application {
 		return ratio;
 	}
 	
+	public void drawPerson(int x, int y){
+		double ratio = BuildingtoFit();
+		gc.setFill(Color.RED);
+		gc.fillOval((x*ratio)+ratio*0.5, (y*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);//*0.8 ratio just to get person to be smaller than door
+	}
+	
+	private void drawObject(){
+		
+	}
+	
 	private void drawLines(GraphicsContext gc) {
 		double ratio = BuildingtoFit();
 //		gc.setFill(Color.BLUE);
@@ -318,11 +331,11 @@ public class BuildingGUI extends Application {
 //        gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
         for (int i = 0; i < bi.getBuildingDraw().length; i++) {
         	for (int j = 0; j < bi.getBuildingDraw()[i].length; j++) {
-        		if (bi.getBuildingDraw()[i][j] == '|') {
-        			gc.strokeLine(i*ratio, j*ratio, i*ratio+ratio, j*ratio);///TODO set using ij and ratio from buildingtoFit
+        		if (bi.getBuildingDraw()[j][i] == '|') {
+        			gc.strokeLine(i*ratio, j*ratio-(ratio*0.5), i*ratio, j*ratio+(ratio*0.5));///TODO set using ij and ratio from buildingtoFit
         		}
-        		else if (bi.getBuildingDraw()[i][j] == '-') {
-        			gc.strokeLine(i*ratio, j*ratio, i*ratio, j*ratio+ratio);///TODO set using ij and ratio from buildingtoFit
+        		else if (bi.getBuildingDraw()[j][i] == '-') {
+        			gc.strokeLine(i*ratio-(ratio*0.5), j*ratio, i*ratio+(ratio*0.5), j*ratio);///TODO set using ij and ratio from buildingtoFit
         		}
         	}
         }
