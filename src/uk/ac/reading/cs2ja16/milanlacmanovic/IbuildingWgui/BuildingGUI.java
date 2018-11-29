@@ -283,7 +283,7 @@ public class BuildingGUI extends Application {
 	    stagePrimary.show();
 //	    final long startNanoTime = System.nanoTime();
 		// for animation, note start time
-	    scene.setCursor(Cursor.WAIT);
+//	    scene.setCursor(Cursor.WAIT); //CHANGE Cursor (could be used on canvas to resize building/edit)
 	    drawLines(gc); //Draw Lines Test
 	    new AnimationTimer()			// create timer
 	    	{
@@ -302,26 +302,27 @@ public class BuildingGUI extends Application {
 		stagePrimary.show();
 	}
 	
-	private void BuildingtoFit() {
-		int ratio = 0;
+	private double BuildingtoFit() {//NEED TO DRAW BUILDING FIRST
+		double ratio = 0;
 		ratio = bi.getBuildingDraw().length;
 		if (ratio < bi.getBuildingDraw()[0].length) ratio = bi.getBuildingDraw()[0].length;
 		ratio = canvasSize/ratio; //Ratio is optimal size to show all of building in canvas at once
+		return ratio;
 	}
 	
 	private void drawLines(GraphicsContext gc) {
+		double ratio = BuildingtoFit();
 //		gc.setFill(Color.BLUE);
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(5);
 //        gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
-        gc.strokeLine(10, 10, 10, 40);
         for (int i = 0; i < bi.getBuildingDraw().length; i++) {
         	for (int j = 0; j < bi.getBuildingDraw()[i].length; j++) {
         		if (bi.getBuildingDraw()[i][j] == '|') {
-        			gc.strokeLine(10, 10, 10, 40);///TODO set using ij and ratio from buildingtoFit
+        			gc.strokeLine(i*ratio, j*ratio, i*ratio+ratio, j*ratio);///TODO set using ij and ratio from buildingtoFit
         		}
         		else if (bi.getBuildingDraw()[i][j] == '-') {
-        			gc.strokeLine(10, 10, 10, 40);///TODO set using ij and ratio from buildingtoFit
+        			gc.strokeLine(i*ratio, j*ratio, i*ratio, j*ratio+ratio);///TODO set using ij and ratio from buildingtoFit
         		}
         	}
         }

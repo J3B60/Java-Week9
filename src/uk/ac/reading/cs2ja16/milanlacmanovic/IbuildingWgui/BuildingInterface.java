@@ -52,11 +52,12 @@ public class BuildingInterface {
 	 	* X exits the program
 	 */
 	public BuildingInterface() {
-//		  s = new Scanner(System.in);	// set up scanner for user input
-//	    int bno = 1;			// initially building 1 selected
-//	
-//	    myBuilding = new Building(buildingString(bno));// create building
-//		
+//		s = new Scanner(System.in);	// set up scanner for user input
+	    int bno = 1;			// initially building 1 selected
+	
+	    myBuilding = new Building(buildingString(bno));// create building
+	    doDisplay();//Pre draw building
+		
 //	    char ch = ' ';
 //	    do {
 //	       	System.out.print("(N)ew buidling, (D)raw, (M)ove, (A)nimate, (P)ath, (U)ser Input New Building, (S)ave, (L)oad, (I)nfo, e(X)it > ");
