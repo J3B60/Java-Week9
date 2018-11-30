@@ -193,20 +193,21 @@ public class BuildingGUI extends Application {
 	    	       });
 	}
 	
-	private Button setStartButton() {
+	private Button setAnimateButton() {
 			// create button
-		Button btnBottom = new Button("Start");
+		Button btnBottom = new Button("Animate");
 				// now add handler
 		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(SetAnimationRun == true) {
-					startNanoTime = System.nanoTime();
-					SetAnimationRun = true;
-				}
-				else {
-					SetAnimationRun = true;
-				}
+//				if(SetAnimationRun == true) {
+    				while(!bi.myBuilding.PersonCompletePath()) {//Animate while not final
+    					bi.animate();
+    				}
+//				}
+//				else {
+//					SetAnimationRun = true;
+//				}
 				setBottomButtons();
 					// and its action to draw earth at random angle
 			}
@@ -243,7 +244,7 @@ public class BuildingGUI extends Application {
 		}
 	private void setBottomButtons(){
 		btPane.getChildren().clear();
-		btPane.getChildren().add(setStartButton());
+		btPane.getChildren().add(setAnimateButton());
 		btPane.getChildren().add(setPauseButton());
 		
 	}
@@ -316,7 +317,7 @@ public class BuildingGUI extends Application {
 	public void drawPerson(int x, int y){
 		double ratio = BuildingtoFit();
 		gc.setFill(Color.RED);
-		gc.fillOval((x*ratio)+ratio*0.5, (y*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);//*0.8 ratio just to get person to be smaller than door
+		gc.fillOval((y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);//*0.8 ratio just to get person to be smaller than door
 	}
 	
 	private void drawObject(){

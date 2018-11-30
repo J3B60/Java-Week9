@@ -222,7 +222,7 @@ public class BuildingInterface {
 	public void animate() {
 		while (!myBuilding.CheckPersonReachedDestination()) {
 			myBuilding.movePersoninBuilding(this);
-			System.out.println(doDisplay());
+//			System.out.println(doDisplay());
 			try {
 				TimeUnit.MILLISECONDS.sleep(250);
 			} catch (InterruptedException e) {
