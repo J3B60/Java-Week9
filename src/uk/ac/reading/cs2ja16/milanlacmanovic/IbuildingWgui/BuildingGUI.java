@@ -203,6 +203,7 @@ public class BuildingGUI extends Application {
 //				if(SetAnimationRun == true) {
     				while(!bi.myBuilding.PersonCompletePath()) {//Animate while not final
     					bi.animate();
+    					drawIt();
     				}
 //				}
 //				else {
