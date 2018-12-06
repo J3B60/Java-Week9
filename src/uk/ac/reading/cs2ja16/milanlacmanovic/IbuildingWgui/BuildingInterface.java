@@ -3,12 +3,11 @@ package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
 import java.util.Arrays;
-import javax.swing.JFileChooser;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 /**
@@ -21,7 +20,7 @@ import javax.swing.JOptionPane;
 public class BuildingInterface {
 	Scanner s;	//scanner used for input from user
 	char[][] BuildingDraw; //Holds Drawn Building array for the console output
-	
+	char[][] BuildingDrawObjects; //PLAN IS TO ACTIVATE LAYERS OF A FLOOR -FLOOR, CEILING <- this will include smoke detectors, sprinklers, cameras, other alarms, VENTILATION SYSTEM INBETWEEN FLOORS MAYBE?
 	Building myBuilding;//Building
 	/**
 	 * return as String definition of bOpt'th building
@@ -29,6 +28,7 @@ public class BuildingInterface {
 	 */
 	public String buildingString (int bOpt) {
 		if (bOpt == 1) {
+			//return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
 			return "11 11;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6";
 		}
 		else {
@@ -56,8 +56,9 @@ public class BuildingInterface {
 	    int bno = 1;			// initially building 1 selected
 	
 	    myBuilding = new Building(buildingString(bno));// create building
-	    System.out.println(doDisplay());//Pre draw building
-		
+	    doDisplay();//Pre draw building
+	    BuildingDrawObjects = getBuildingDraw();
+	    drawBuildingObjects();
 //	    char ch = ' ';
 //	    do {
 //	       	System.out.print("(N)ew buidling, (D)raw, (M)ove, (A)nimate, (P)ath, (U)ser Input New Building, (S)ave, (L)oad, (I)nfo, e(X)it > ");
@@ -241,6 +242,10 @@ public class BuildingInterface {
 		return BuildingDraw;
 	}
 	
+	public char[][] getBuildingDrawObjects(){
+		return BuildingDrawObjects;
+	}
+	
 	/**
 	 * Window allowing for user to input a string for Building. No checks if the String is valid
 	 * @return
@@ -305,13 +310,17 @@ public class BuildingInterface {
 		return temp;
 	}
 	
-	/**
-	 * Main for the whole program, starts Building Interface constructor
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		BuildingInterface bi = new BuildingInterface();	////###NOTE: Major Change from b to bi
-	//just call the interface
+	private void drawBuildingObjects(){
+		BuildingDrawObjects[myBuilding.getAllBuildingObjects().get(0).getXPosition()][myBuilding.getAllBuildingObjects().get(0).getYPosition()] = 'S';//Test to jet first
+		
 	}
+//	/**
+//	 * Main for the whole program, starts Building Interface constructor
+//	 * @param args
+//	 */
+//	public static void main(String[] args) {
+//		// TODO Auto-generated method stub
+//		BuildingInterface bi = new BuildingInterface();	////###NOTE: Major Change from b to bi
+//	//just call the interface
+//	}
 }

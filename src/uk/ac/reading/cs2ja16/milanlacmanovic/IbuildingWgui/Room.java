@@ -1,8 +1,8 @@
 package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 
 import java.awt.Point;
-import java.util.Random;
 import java.util.Arrays;
+import java.util.Random;
 
 /**
  * This class deals with rooms, it takes string input co-ordinates which 

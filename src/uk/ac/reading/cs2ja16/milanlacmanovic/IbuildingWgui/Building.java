@@ -1,9 +1,8 @@
 package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Arrays;
-import java.awt.Point;
 
 /**
  * Building Holds the information of the 
@@ -20,6 +19,9 @@ public class Building {
 	private int randRoom;				//Random Room Number
 	public Person occupant;			//Person point P on BuildingDraw
 	private String OriginalInput; //Original input string for building Constructor to be able to call back for saveing in the building interface
+	private ArrayList<BuildingObject> allBuildingObjects;
+	public BuildingObject smokeD;//Temporary !!!!!!!!!!
+	private ArrayList<Person> allPeople;
 	
 	/**
 	 * Building Constructor which initialises the Rooms arraylist, Random generator
@@ -31,13 +33,20 @@ public class Building {
 	Building(String bS){
 		allRooms = new ArrayList<Room>();
 		allRooms.clear(); //Arraylist set uo
+		allBuildingObjects = new ArrayList<BuildingObject>();
+		allBuildingObjects.clear();
+		allPeople = new ArrayList<Person>();
+		allPeople.clear();
 		OriginalInput = bS; //Input saved
 		setBuilding(bS); //Setup the building
 		//System.out.println(allRooms);//Test
 		randGen = new Random(); //Random generator
 		occupant = new Person(allRooms.get(randRoom).getRandom(randGen)); // Occupant start at random point
+		smokeD = new SmokeDetector();
 		occupant.PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
 		nextPathPoint(); //Add the list of Point paths for person to follow next
+		allPeople.add(occupant);
+		allBuildingObjects.add(new SmokeDetector());
 	}
 	
 	/**
@@ -121,6 +130,7 @@ public class Building {
 	public void showBuilding (BuildingInterface bi) {
 		for (Room r: allRooms) r.showRoom(bi);
 		occupant.showPerson(bi);
+		//for (BuildingObject bo : allBuildingObjects) bo.presentGUI();
 	}
 	
 	/**
@@ -191,6 +201,10 @@ public class Building {
 	
 	public String getOriginalInput() {
 		return OriginalInput; //Building Constructor String Input
+	}
+	
+	public ArrayList<BuildingObject> getAllBuildingObjects(){
+		return allBuildingObjects;
 	}
 	
 	/**

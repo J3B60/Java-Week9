@@ -1,6 +1,5 @@
 package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 
-import javafx.scene.Cursor;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
@@ -12,21 +11,19 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Paint;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.ArcType;
 import javafx.stage.Stage;
 
 public class BuildingGUI extends Application {
@@ -50,6 +47,7 @@ public class BuildingGUI extends Application {
 	public void drawIt () {
 		drawLines(gc);
 		bi.myBuilding.occupant.showPersonGUI(this);
+		bi.myBuilding.smokeD.presentGUI(this);
 	}
 	
 	private void showMessage(String TStr, String CStr) {
@@ -321,8 +319,9 @@ public class BuildingGUI extends Application {
 		gc.fillOval((y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);//*0.8 ratio just to get person to be smaller than door
 	}
 	
-	private void drawObject(){
-		
+	public void drawObject(Image i, double x, double y){
+		double ratio = BuildingtoFit();
+		gc.drawImage(i, x*ratio*2, (y-1)*ratio*2, ratio, ratio);//Bs
 	}
 	
 	private void drawLines(GraphicsContext gc) {
