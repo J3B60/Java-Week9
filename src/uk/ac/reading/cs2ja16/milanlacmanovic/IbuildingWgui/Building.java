@@ -21,6 +21,10 @@ public class Building {
 	private String OriginalInput; //Original input string for building Constructor to be able to call back for saveing in the building interface
 	private ArrayList<BuildingObject> allBuildingObjects;
 	public BuildingObject smokeD;//Temporary !!!!!!!!!!
+	public BuildingObject smartLB;//TEMP
+	public BuildingObject smartLift;//TEMP
+	public BuildingObject motionsens;//TEMP
+	public BuildingObject aircon;//Temo
 	private ArrayList<Person> allPeople;
 	
 	/**
@@ -42,11 +46,17 @@ public class Building {
 		//System.out.println(allRooms);//Test
 		randGen = new Random(); //Random generator
 		occupant = new Person(allRooms.get(randRoom).getRandom(randGen)); // Occupant start at random point
-		smokeD = new SmokeDetector();
+		smokeD = new SmokeDetector();//TEMP
+		smartLB = new LightBulb();//TEMP
+		smartLift = new Lift();//TEMP
+		aircon = new AirConditioner();//Temp
+		motionsens = new MotionSensor();//TEMP
 		occupant.PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
 		nextPathPoint(); //Add the list of Point paths for person to follow next
 		allPeople.add(occupant);
 		allBuildingObjects.add(new SmokeDetector());
+		allBuildingObjects.add(new LightBulb());
+		allBuildingObjects.add(new Lift());//.............
 	}
 	
 	/**

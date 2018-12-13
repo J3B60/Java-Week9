@@ -48,6 +48,10 @@ public class BuildingGUI extends Application {
 		drawLines(gc);
 		bi.myBuilding.occupant.showPersonGUI(this);
 		bi.myBuilding.smokeD.presentGUI(this);
+		bi.myBuilding.smartLB.presentGUI(this);
+		bi.myBuilding.smartLift.presentGUI(this);
+		bi.myBuilding.aircon.presentGUI(this);
+		bi.myBuilding.motionsens.presentGUI(this);
 	}
 	
 	private void showMessage(String TStr, String CStr) {
@@ -161,7 +165,7 @@ public class BuildingGUI extends Application {
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		Label l = new Label(bi.toString());
+		Label l = new Label(bi.toString() + "\n" + bi.myBuilding.smokeD.toString() + "\n" + bi.myBuilding.smartLB.toString() + "\n" + bi.myBuilding.smartLift.toString() + "\n" + bi.myBuilding.aircon.toString() + "\n" + bi.myBuilding.motionsens.toString());
 		rtPane.getChildren().add(l);				// add label to pane	
 	}
 	
@@ -321,7 +325,7 @@ public class BuildingGUI extends Application {
 	
 	public void drawObject(Image i, double x, double y){
 		double ratio = BuildingtoFit();
-		gc.drawImage(i, x*ratio*2, (y-1)*ratio*2, ratio, ratio);//Bs
+		gc.drawImage(i, (y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio, ratio);//Bs
 	}
 	
 	private void drawLines(GraphicsContext gc) {
@@ -340,6 +344,23 @@ public class BuildingGUI extends Application {
         		}
         	}
         }
+	}
+        private void drawWindow(GraphicsContext gc) {
+//    		double ratio = BuildingtoFit();
+////    		gc.setFill(Color.BLUE);
+//            gc.setStroke(Color.BLACK);
+//            gc.setLineWidth(5);
+////            gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
+//            for (int i = 0; i < bi.getBuildingDraw().length; i++) {
+//            	for (int j = 0; j < bi.getBuildingDraw()[i].length; j++) {
+//            		if (bi.getBuildingDraw()[j][i] == '|') {
+//            			gc.strokeLine(i*ratio, j*ratio-(ratio*0.5), i*ratio, j*ratio+(ratio*0.5));///TODO set using ij and ratio from buildingtoFit
+//            		}
+//            		else if (bi.getBuildingDraw()[j][i] == '-') {
+//            			gc.strokeLine(i*ratio-(ratio*0.5), j*ratio, i*ratio+(ratio*0.5), j*ratio);///TODO set using ij and ratio from buildingtoFit
+//            		}
+//            	}
+        }
 //        gc.fillOval(10, 60, 10, 10); //FROM an Example Online (maybe useful to refer back to in the future when drawing new stuff)
 //        gc.strokeOval(60, 60, 30, 30);
 //        gc.strokeRoundRect(160, 60, 30, 30, 10, 10);
@@ -355,7 +376,6 @@ public class BuildingGUI extends Application {
 //                         new double[]{210, 210, 240, 240}, 4);
 //        gc.strokePolyline(new double[]{110, 140, 110, 140},
 //                          new double[]{210, 210, 240, 240}, 4);
-	}
 	
 	public int getCanvasSize(){
 		return canvasSize;

@@ -11,7 +11,7 @@ public class SmokeDetector extends BuildingObject {
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("Smoke-Detector.png"));
 		objectName = "Smoke Detector - " + String.valueOf(objectID);
-		objectPosition = new Point(4,5);//CURRENT DEFAULT FOR NOW
+		objectPosition = new Point(2,8);//CURRENT DEFAULT FOR NOW
 	}
 	
 	public void presentGUI(BuildingGUI bg){
@@ -33,7 +33,7 @@ public class SmokeDetector extends BuildingObject {
 		return objectName;
 	}
 	public String toString(){
-		return "";
+		return objectName + " (" + String.valueOf(getXPosition()) + "," + String.valueOf(getYPosition()) + ")";
 	}
 	public Point getPosition(){
 		return objectPosition;
