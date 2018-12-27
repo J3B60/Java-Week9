@@ -3,6 +3,7 @@ package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +30,7 @@ public class BuildingInterface {
 	public String buildingString (int bOpt) {
 		if (bOpt == 1) {
 			//return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
-			return "11 11;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6";
+			return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6";//building size can be same size as max room coord dimensions
 		}
 		else {
 			return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
@@ -308,6 +309,15 @@ public class BuildingInterface {
 			e.printStackTrace(); //Simple error handling similar to RJM's for the animate
 		}
 		return temp;
+	}
+	
+	public ArrayList<Room> getAllRooms(){
+		return myBuilding.getAllRooms();
+	}
+	
+	public int[] getBuildingXY() {
+		int[] bsize = {myBuilding.getBuildingx(), myBuilding.getBuildingy()};
+		return bsize;
 	}
 	
 	private void drawBuildingObjects(){

@@ -1,6 +1,7 @@
 package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
@@ -140,7 +141,7 @@ public class Room{
 			return 4;//North Side
 		}
 		else {
-			return 0; //a real door Point Should not reach this point
+			return 0; //a real door Point Should not reach this point otherwise input is not valid
 		}
 	}
 	/**
@@ -165,7 +166,7 @@ public class Room{
 			temp = new Point((int)getDoorPoint().getX(), (int)getDoorPoint().getY()+1);
 			return temp;
 		}
-		else if (DoorRelativePositiontoRoom == 2) {
+		else if (DoorRelativePositiontoRoom == 4) {
 			temp = new Point((int)getDoorPoint().getX(), (int)getDoorPoint().getY()-1);
 			return temp;
 		}
@@ -194,7 +195,7 @@ public class Room{
 			temp = new Point((int)getDoorPoint().getX(), (int)getDoorPoint().getY()-1);
 			return temp;
 		}
-		else if (DoorRelativePositiontoRoom == 2) {
+		else if (DoorRelativePositiontoRoom == 4) {
 			temp = new Point((int)getDoorPoint().getX(), (int)getDoorPoint().getY()+1);
 			return temp;
 		}
@@ -203,15 +204,18 @@ public class Room{
 			return temp;
 		}
 	}
+	public int[] getDoorCoords() {
+		return roomCoord;
+	}
 	/**
 	 * Used for testing Room class
 	 * @param args
 	 */
-	public static void main(String[] args) {
-		Point P = new Point(7,9); //Create test Point object
-		// Note to self:(int) P.getX() is an integer returning x coord of Point
-		Room r = new Room("0 0 5 5 0 2"); //Create Test Room
-		System.out.println(r.toString(P, r.isInRoom(P))); //output to console if point is in room statement
-	}
+//	public static void main(String[] args) {
+//		Point P = new Point(7,9); //Create test Point object
+//		// Note to self:(int) P.getX() is an integer returning x coord of Point
+//		Room r = new Room("0 0 5 5 0 2"); //Create Test Room
+//		System.out.println(r.toString(P, r.isInRoom(P))); //output to console if point is in room statement
+//	}
 }
 

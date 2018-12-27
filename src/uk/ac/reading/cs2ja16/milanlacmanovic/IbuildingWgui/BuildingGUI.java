@@ -331,19 +331,54 @@ public class BuildingGUI extends Application {
 	private void drawLines(GraphicsContext gc) {
 		double ratio = BuildingtoFit();
 //		gc.setFill(Color.BLUE);
+//        gc.setStroke(Color.BLACK);
+//        gc.setLineWidth(5);
+//        gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
+//        for (int i = 0; i < bi.getBuildingDraw().length; i++) {
+//        	for (int j = 0; j < bi.getBuildingDraw()[i].length; j++) {
+//        		if (bi.getBuildingDraw()[j][i] == '|') {
+//        				gc.strokeLine(i*ratio, j*ratio-(ratio*0.5), i*ratio, j*ratio+(ratio*0.5));///TODO set using ij and ratio from buildingtoFit
+//        		}
+//        		else if (bi.getBuildingDraw()[j][i] == '-') {
+//        			if (i == 1 && j == 1) {//Is the First # then - //this assumes room starts right after building
+//        				gc.strokeLine(i*ratio+(ratio*0.5), j*ratio, i*ratio, j*ratio);///TODO set using ij and ratio from buildingtoFit
+//        				gc.strokeLine(i*ratio, j*ratio, i*ratio, j*ratio+(ratio*0.5));///TODO set using ij and ratio from buildingtoFit
+//        			}
+//        			else if (i == 1 && j == bi.getBuildingDraw()[i].length -2) {//Is the First # then - //this assumes room starts right after building
+//        				gc.strokeLine(i*ratio+(ratio*0.5), j*ratio, i*ratio, j*ratio);///TODO set using ij and ratio from buildingtoFit
+//        				gc.strokeLine(i*ratio, j*ratio, i*ratio, j*ratio+(ratio*0.5));///TODO set using ij and ratio from buildingtoFit
+//        			}
+//        			else if (i == bi.getBuildingDraw()[i].length -2 && j == 1) {
+//        				gc.strokeLine(i*ratio+(ratio*0.5), j*ratio, i*ratio, j*ratio);///TODO set using ij and ratio from buildingtoFit
+//        			}
+//        			else if (i == bi.getBuildingDraw()[i].length -2 && j == bi.getBuildingDraw()[i].length -2) {
+//        				gc.strokeLine(i*ratio+(ratio*0.5), j*ratio, i*ratio, j*ratio);///TODO set using ij and ratio from buildingtoFit
+//        			}
+//        			else {
+//        				gc.strokeLine(i*ratio-(ratio*0.5), j*ratio, i*ratio+(ratio*0.5), j*ratio);///TODO set using ij and ratio from buildingtoFit
+//        			}
+//        		}
+//        	}
+//        }
+		//Above is old and uses Building Interface
+		//Building outer wall
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(5);
-//        gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
-        for (int i = 0; i < bi.getBuildingDraw().length; i++) {
-        	for (int j = 0; j < bi.getBuildingDraw()[i].length; j++) {
-        		if (bi.getBuildingDraw()[j][i] == '|') {
-        			gc.strokeLine(i*ratio, j*ratio-(ratio*0.5), i*ratio, j*ratio+(ratio*0.5));///TODO set using ij and ratio from buildingtoFit
-        		}
-        		else if (bi.getBuildingDraw()[j][i] == '-') {
-        			gc.strokeLine(i*ratio-(ratio*0.5), j*ratio, i*ratio+(ratio*0.5), j*ratio);///TODO set using ij and ratio from buildingtoFit
-        		}
-        	}
+        gc.strokeLine(1*ratio, 1*ratio, (bi.getBuildingXY()[0]+1)*ratio, 1*ratio); //North wall
+        gc.strokeLine(1*ratio, 1*ratio, 1*ratio, (bi.getBuildingXY()[1]+1)*ratio); //West wall
+        gc.strokeLine((bi.getBuildingXY()[0]+1)*ratio, 1*ratio, (bi.getBuildingXY()[0]+1)*ratio, (bi.getBuildingXY()[1]+1)*ratio); //East wall
+        gc.strokeLine(1*ratio, (bi.getBuildingXY()[1]+1)*ratio, (bi.getBuildingXY()[0]+1)*ratio, (bi.getBuildingXY()[1]+1)*ratio); //South Wall
+        //Room walls
+        gc.setStroke(Color.BLACK);
+        gc.setLineWidth(2);
+        for (int i = 0; i < bi.getAllRooms().size() ; i++) {
+        	gc.strokeLine((bi.getAllRooms().get(i).getDoorCoords()[1]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[0]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[1]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[2]+1)*ratio); //North wall
+            gc.strokeLine((bi.getAllRooms().get(i).getDoorCoords()[1]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[0]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[3]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[0]+1)*ratio); //West wall
+            gc.strokeLine((bi.getAllRooms().get(i).getDoorCoords()[1]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[2]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[3]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[2]+1)*ratio); //East wall
+            gc.strokeLine((bi.getAllRooms().get(i).getDoorCoords()[3]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[0]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[3]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[2]+1)*ratio); //South Wall
         }
+        //need to cut out doors
+		
 	}
         private void drawWindow(GraphicsContext gc) {
 //    		double ratio = BuildingtoFit();
