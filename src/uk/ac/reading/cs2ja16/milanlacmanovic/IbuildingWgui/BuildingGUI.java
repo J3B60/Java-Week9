@@ -26,10 +26,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class BuildingGUI extends Application {
 	int canvasSize = 512;				// constants for relevant sizes
 	double t;
     GraphicsContext gc;
+    GraphicsContext secondaryGC;
+    private VBox ltPane;
     private VBox rtPane;
     private HBox btPane;
     private boolean SetAnimationRun = true;
@@ -165,8 +171,24 @@ public class BuildingGUI extends Application {
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		Label l = new Label(bi.toString() + "\n" + bi.myBuilding.smokeD.toString() + "\n" + bi.myBuilding.smartLB.toString() + "\n" + bi.myBuilding.smartLift.toString() + "\n" + bi.myBuilding.aircon.toString() + "\n" + bi.myBuilding.motionsens.toString());
-		rtPane.getChildren().add(l);				// add label to pane	
+		Label Rl = new Label(bi.toString() + "\n" + bi.myBuilding.smokeD.toString() + "\n" + bi.myBuilding.smartLB.toString() + "\n" + bi.myBuilding.smartLift.toString() + "\n" + bi.myBuilding.aircon.toString() + "\n" + bi.myBuilding.motionsens.toString());
+		rtPane.getChildren().add(Rl);				// add label to pane	
+	}
+	
+	public void drawSky() {
+		ltPane.getChildren().clear();					// clear rtpane
+		
+				// now create label
+		//Need to loop for all items in solar system and add to temp 
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		Label Ll = new Label(dateFormat.format(date));
+		Canvas sky = new Canvas(50, canvasSize);
+		secondaryGC = sky.getGraphicsContext2D();
+		Image skyImg = new Image(getClass().getResourceAsStream("DaySkyTransition.png"));
+		secondaryGC.drawImage(skyImg, 30, (-(int) t)*100);
+		ltPane.getChildren().add(Ll);
+		ltPane.getChildren().add(sky);				// add label to pane
 	}
 	
 	private void SystemPosSet(double x, double y) {
@@ -280,6 +302,9 @@ public class BuildingGUI extends Application {
 	    rtPane = new VBox();
 	    bp.setRight(rtPane);
 	    
+	    ltPane = new VBox();
+	    bp.setLeft(ltPane);
+	    
 	    btPane = new HBox();
 	    bp.setBottom(btPane);
 	    setBottomButtons();
@@ -298,6 +323,7 @@ public class BuildingGUI extends Application {
 	    				t = (currentNanoTime - startNanoTime) / 1000000000.0;
 	    				drawIt();
 	    				drawStatus();
+	    				drawSky();
 	    				//#############################################
 	    			}
 	    			else{
