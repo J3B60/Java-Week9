@@ -51,4 +51,14 @@ public class Window extends BuildingObject {
 		objectPosition = pobjectPosition;
 	}
 
+	public int objectInRoom(Building myBuilding) {
+		for (int i = 0; i < myBuilding.getAllRooms().size(); i++) {//Loop to check all rooms
+			if (myBuilding.getAllRooms().get(i).isInRoom(objectPosition)) {//if in a room return room number (The position in array)
+				return i; //NOTE THIS IS DIFFERENT Start from 0
+			}
+		}
+		return -1; //If not found then return -1
+	}
+	//Day -> then Light in Room
+
 }

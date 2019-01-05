@@ -1,6 +1,7 @@
 package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
@@ -41,6 +42,7 @@ public class BuildingGUI extends Application {
     private boolean SetAnimationRun = true;
     private Random rgen = new Random();
     BuildingInterface bi = new BuildingInterface();
+    private int skyPos = -360;
 
     long startNanoTime = System.nanoTime();
     /**
@@ -180,13 +182,20 @@ public class BuildingGUI extends Application {
 		
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
 		Date date = new Date();
 		Label Ll = new Label(dateFormat.format(date));
 		Canvas sky = new Canvas(50, canvasSize);
 		secondaryGC = sky.getGraphicsContext2D();
 		Image skyImg = new Image(getClass().getResourceAsStream("DaySkyTransition.png"));
-		secondaryGC.drawImage(skyImg, 30, (-(int) t)*100);
+		secondaryGC.setFill(Color.RED);
+		secondaryGC.fillPolygon(new double[]{20, 20, 30},
+              new double[]{(canvasSize/2) - 5, (canvasSize/2) + 5, canvasSize/2}, 3);
+		if (skyPos == -1440) {
+			skyPos = -360;
+		}
+		skyPos =- 3*((int) t/120);
+		secondaryGC.drawImage(skyImg, 30, skyPos);
 		ltPane.getChildren().add(Ll);
 		ltPane.getChildren().add(sky);				// add label to pane
 	}
@@ -224,15 +233,15 @@ public class BuildingGUI extends Application {
 		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-//				if(SetAnimationRun == true) {
+				if(SetAnimationRun == true) {
     				while(!bi.myBuilding.PersonCompletePath()) {//Animate while not final
     					bi.animate();
     					drawIt();
     				}
-//				}
-//				else {
-//					SetAnimationRun = true;
-//				}
+				}
+				else {
+					SetAnimationRun = true;
+				}
 				setBottomButtons();
 					// and its action to draw earth at random angle
 			}
@@ -324,7 +333,16 @@ public class BuildingGUI extends Application {
 	    				drawIt();
 	    				drawStatus();
 	    				drawSky();
-	    				//#############################################
+	    				if (bi.myBuilding.PersonCompletePath()) {
+	    					SetAnimationRun = false;
+	    				}
+	    				bi.myBuilding.movePersoninBuilding(bi);
+//	    				System.out.println(doDisplay());
+	    				try {
+	    					TimeUnit.MILLISECONDS.sleep(250);
+	    				} catch (InterruptedException e) {
+	    					e.printStackTrace();
+	    				}
 	    			}
 	    			else{
 	    				//######################
@@ -334,7 +352,10 @@ public class BuildingGUI extends Application {
 	    
 		stagePrimary.show();
 	}
-	
+	/**
+	 * The ratio to keep things inside the canvas NOTE ignores line thickness
+	 * @return ratio
+	 */
 	private double BuildingtoFit() {//NEED TO DRAW BUILDING FIRST
 		double ratio = 0;
 		ratio = bi.getBuildingDraw().length;
@@ -408,10 +429,10 @@ public class BuildingGUI extends Application {
 	}
         private void drawWindow(GraphicsContext gc) {
 //    		double ratio = BuildingtoFit();
-////    		gc.setFill(Color.BLUE);
+//    		gc.setFill(Color.BLUE);
 //            gc.setStroke(Color.BLACK);
 //            gc.setLineWidth(5);
-////            gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
+//            gc.fillRect(10, 30, 50, 50); //For Lights or Temps representaiton 
 //            for (int i = 0; i < bi.getBuildingDraw().length; i++) {
 //            	for (int j = 0; j < bi.getBuildingDraw()[i].length; j++) {
 //            		if (bi.getBuildingDraw()[j][i] == '|') {
@@ -440,6 +461,10 @@ public class BuildingGUI extends Application {
 	
 	public int getCanvasSize(){
 		return canvasSize;
+	}
+	
+	public double getRatio() {
+		return BuildingtoFit();
 	}
 	
 	public static void main(String[] args) {

@@ -212,11 +212,17 @@ public class Building {
 	public String getOriginalInput() {
 		return OriginalInput; //Building Constructor String Input
 	}
-	
+	/**
+	 * get list of uilding objects
+	 * @return allBuildingObjects
+	 */
 	public ArrayList<BuildingObject> getAllBuildingObjects(){
 		return allBuildingObjects;
 	}
-	
+	/**
+	 * 	gets a copy of allRooms in building
+	 * @return allRooms
+	 */
 	public ArrayList<Room> getAllRooms(){
 		return allRooms;
 	}

@@ -4,19 +4,19 @@ import java.awt.Point;
 
 import javafx.scene.image.Image;
 
-public class SmokeDetector extends BuildingObject {
-	
-	
-	SmokeDetector(){
+public class Radiator extends BuildingObject {
+
+	Radiator(){
 		objectID++;//ToTest
-		objectImage = new Image(getClass().getResourceAsStream("Smoke-Detector.png"));
-		objectName = "Smoke Detector - " + String.valueOf(objectID);
-		objectPosition = new Point(2,8);//CURRENT DEFAULT FOR NOW
+		objectImage = new Image(getClass().getResourceAsStream("Radiator.jpg"));
+		objectName = "Radiator - " + String.valueOf(objectID);
+		objectPosition = new Point(9,5);//CURRENT DEFAULT FOR NOW
 	}
 	
-	public void presentGUI(BuildingGUI bg){
-		bg.drawObject(getImage(), getXPosition(), getYPosition());
+	public void presentGUI(BuildingGUI bg) {
+		bg.drawObject(getImage(), getXPosition(), getYPosition());	
 	}
+
 	public int getID(){
 		return objectID;
 	}
@@ -50,11 +50,6 @@ public class SmokeDetector extends BuildingObject {
 	public void setPosition(Point pobjectPosition){
 		objectPosition = pobjectPosition;
 	}
-	
-	public void detectFire(){
-		//Have some sort of flashing/ change the image some how or add an alert to the GUI/Sound/
-	}
-
 	public int objectInRoom(Building myBuilding) {
 		for (int i = 0; i < myBuilding.getAllRooms().size(); i++) {//Loop to check all rooms
 			if (myBuilding.getAllRooms().get(i).isInRoom(objectPosition)) {//if in a room return room number (The position in array)
@@ -63,5 +58,5 @@ public class SmokeDetector extends BuildingObject {
 		}
 		return -1; //If not found then return -1
 	}
-	
+
 }

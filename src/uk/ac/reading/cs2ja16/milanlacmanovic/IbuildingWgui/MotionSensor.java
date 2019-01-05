@@ -5,7 +5,7 @@ import java.awt.Point;
 import javafx.scene.image.Image;
 
 public class MotionSensor extends BuildingObject{
-
+	Boolean powerSwitch = false;
 	MotionSensor(){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("motiondetect.png"));
@@ -50,5 +50,28 @@ public class MotionSensor extends BuildingObject{
 	public void setPosition(Point pobjectPosition){
 		objectPosition = pobjectPosition;
 	}
-
+	
+	public int objectInRoom(Building myBuilding) {
+		for (int i = 0; i < myBuilding.getAllRooms().size(); i++) {//Loop to check all rooms
+			if (myBuilding.getAllRooms().get(i).isInRoom(objectPosition)) {//if in a room return room number (The position in array)
+				return i + 1; //Rooms start from 1 (not 0)
+			}
+		}
+		return -1; //If not found then return -1
+	}
+	/**
+	 * If person is in the same room as Motion Sensor then turn ON sensor else OFF
+	 * @param myBuilding - Passed to get rooms and person
+	 */
+	private void sense(Building myBuilding) {
+		for (int i = 0; i < myBuilding.getAllRooms().size(); i++) {
+			if (myBuilding.PersonInRoom() == objectInRoom(myBuilding)){
+				powerSwitch = true;
+			}
+			else {
+			powerSwitch = false;
+			}
+		}
+	}
+	
 }
