@@ -8,8 +8,12 @@ import java.util.Arrays;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.Box;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  * Building Interface allows for user input from console
@@ -22,7 +26,9 @@ public class BuildingInterface {
 	Scanner s;	//scanner used for input from user
 	char[][] BuildingDraw; //Holds Drawn Building array for the console output
 	char[][] BuildingDrawObjects; //PLAN IS TO ACTIVATE LAYERS OF A FLOOR -FLOOR, CEILING <- this will include smoke detectors, sprinklers, cameras, other alarms, VENTILATION SYSTEM INBETWEEN FLOORS MAYBE?
-	Building myBuilding;//Building
+	//Building myBuilding;//Building
+	ArrayList<Building> allBuildings;
+	int CurrentBuildingIndex = 0;
 	/**
 	 * return as String definition of bOpt'th building
 	 * @param bOpt
@@ -55,8 +61,9 @@ public class BuildingInterface {
 	public BuildingInterface() {
 //		s = new Scanner(System.in);	// set up scanner for user input
 	    int bno = 1;			// initially building 1 selected
-	
-	    myBuilding = new Building(buildingString(bno));// create building
+	    allBuildings = new ArrayList<Building>();
+	    allBuildings.clear();
+	    allBuildings.add(new Building(buildingString(bno)));// create building
 	    doDisplay();//Pre draw building
 	    BuildingDrawObjects = getBuildingDraw();
 	    drawBuildingObjects();
@@ -130,10 +137,10 @@ public class BuildingInterface {
 	 */
 	
 	public String doDisplay() {
-		BuildingDraw = new char[myBuilding.getBuildingx() +2][myBuilding.getBuildingy() + 2]; //Switched x and y around//Setup char array to size of building
+		BuildingDraw = new char[allBuildings.get(CurrentBuildingIndex).getBuildingx() +2][allBuildings.get(CurrentBuildingIndex).getBuildingy() + 2]; //Switched x and y around//Setup char array to size of building
 		String temp = "";
 		showBuildingWall();
-		myBuilding.showBuilding(this);
+		allBuildings.get(CurrentBuildingIndex).showBuilding(this);
 		for (int i = 0; i < BuildingDraw.length; i++) { //Output as Strings
 			for (int j = 0; j < BuildingDraw[i].length; j++) {
 				temp += String.valueOf(BuildingDraw[i][j]);
@@ -153,7 +160,7 @@ public class BuildingInterface {
 	 */
 	
 	public String toString(){
-		return myBuilding.toString();
+		return allBuildings.get(CurrentBuildingIndex).toString();
 	}
 	
 	public void showBuildingWall() {
@@ -222,8 +229,8 @@ public class BuildingInterface {
 	 */
 	
 	public void animate() {
-		while (!myBuilding.CheckPersonReachedDestination()) {
-			myBuilding.movePersoninBuilding(this);
+		while (!allBuildings.get(CurrentBuildingIndex).CheckPersonReachedDestination()) {
+			allBuildings.get(CurrentBuildingIndex).movePersoninBuilding(this);
 //			System.out.println(doDisplay());
 			try {
 				TimeUnit.MILLISECONDS.sleep(250);
@@ -257,6 +264,25 @@ public class BuildingInterface {
 		return userIn;
 	}
 	
+	public void UserConfigBuildingSize() {
+		JTextField xField = new JTextField(5);
+		JTextField yField = new JTextField(5);
+		JPanel myPanel = new JPanel();
+		myPanel.add(new JLabel("x:"));
+	    myPanel.add(xField);
+	    myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	    myPanel.add(new JLabel("y:"));
+	    myPanel.add(yField);
+		int valueIn = JOptionPane.showConfirmDialog(null, myPanel, "Enter Building Size", JOptionPane.OK_CANCEL_OPTION);
+		if (valueIn == JOptionPane.OK_OPTION) {
+		    if (!(xField.getText() == "" || yField.getText() == "")) {//NOT
+		    	allBuildings.get(CurrentBuildingIndex).setBuildingx(Integer.parseInt(xField.getText()));
+		    	allBuildings.get(CurrentBuildingIndex).setBuildingy(Integer.parseInt(yField.getText()));
+				showBuildingWall();
+		    }
+		}
+	}
+	
 	/**
 	 * Allows user to save the current building in the program to file in storage.
 	 */
@@ -273,7 +299,7 @@ public class BuildingInterface {
 			selectedFile = null; //##Bad error handling
 		}
 		try (PrintWriter out = new PrintWriter(selectedFile)) {//Writes to file
-				out.println(myBuilding.getOriginalInput());//Writes the Original Input from Building
+				out.println(allBuildings.get(CurrentBuildingIndex).getOriginalInput());//Writes the Original Input from Building
 				out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();//Error Handling similar to RJM's
@@ -312,18 +338,27 @@ public class BuildingInterface {
 	}
 	
 	public ArrayList<Room> getAllRooms(){
-		return myBuilding.getAllRooms();
+		return allBuildings.get(CurrentBuildingIndex).getAllRooms();
 	}
 	
 	public int[] getBuildingXY() {
-		int[] bsize = {myBuilding.getBuildingx(), myBuilding.getBuildingy()};
+		int[] bsize = {allBuildings.get(CurrentBuildingIndex).getBuildingx(), allBuildings.get(CurrentBuildingIndex).getBuildingy()};
 		return bsize;
 	}
 	
 	private void drawBuildingObjects(){
-		BuildingDrawObjects[myBuilding.getAllBuildingObjects().get(0).getXPosition()][myBuilding.getAllBuildingObjects().get(0).getYPosition()] = 'S';//Test to jet first
+		BuildingDrawObjects[allBuildings.get(CurrentBuildingIndex).getAllBuildingObjects().get(0).getXPosition()][allBuildings.get(CurrentBuildingIndex).getAllBuildingObjects().get(0).getYPosition()] = 'S';//Test to jet first
 		
 	}
+	
+	public int getCurrentBuildingIndex() {
+		return CurrentBuildingIndex;
+	}
+	
+	public void setCurrentBuildingIndex(int x) {
+		CurrentBuildingIndex = x;
+	}
+	
 //	/**
 //	 * Main for the whole program, starts Building Interface constructor
 //	 * @param args

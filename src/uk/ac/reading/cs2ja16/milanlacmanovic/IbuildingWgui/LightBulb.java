@@ -10,7 +10,7 @@ public class LightBulb extends BuildingObject {
 	Boolean powerSwitch = false;
 	LightBulb(){
 		objectID++;//ToTest
-		objectImage = new Image(getClass().getResourceAsStream("Light-bulb.jpg"));
+		objectImage = new Image(getClass().getResourceAsStream("Light-bulb.png"));
 		objectName = "Light Bulb - " + String.valueOf(objectID);
 		objectPosition = new Point(9,5);//CURRENT DEFAULT FOR NOW
 	}

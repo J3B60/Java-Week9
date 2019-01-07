@@ -3,6 +3,9 @@ package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+import javax.imageio.ImageIO;
+import javax.swing.JButton;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -18,15 +21,21 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -36,13 +45,15 @@ public class BuildingGUI extends Application {
 	double t;
     GraphicsContext gc;
     GraphicsContext secondaryGC;
-    private VBox ltPane;
+//    private VBox ltPane;
     private VBox rtPane;
+    private FlowPane toolbar;
     private HBox btPane;
-    private boolean SetAnimationRun = true;
+    private boolean SetAnimationRun = false;
     private Random rgen = new Random();
     BuildingInterface bi = new BuildingInterface();
     private int skyPos = -360;
+    private Boolean gridViewSwitch = false;
 
     long startNanoTime = System.nanoTime();
     /**
@@ -53,13 +64,15 @@ public class BuildingGUI extends Application {
      * @param sz
      */
 	public void drawIt () {
+		gc.clearRect(0,  0,  canvasSize,  canvasSize);
 		drawLines(gc);
-		bi.myBuilding.occupant.showPersonGUI(this);
-		bi.myBuilding.smokeD.presentGUI(this);
-		bi.myBuilding.smartLB.presentGUI(this);
-		bi.myBuilding.smartLift.presentGUI(this);
-		bi.myBuilding.aircon.presentGUI(this);
-		bi.myBuilding.motionsens.presentGUI(this);
+		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().size(); i++) {
+			bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(i).showPersonGUI(this);
+		}
+		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i++) {
+			bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).presentGUI(this);
+		}
+		drawGrid();
 	}
 	
 	private void showMessage(String TStr, String CStr) {
@@ -117,7 +130,7 @@ public class BuildingGUI extends Application {
 		MenuItem mOpen = new MenuItem("Open");
 		mOpen.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		        bi.myBuilding = new Building(bi.LoadFile());
+		        bi.allBuildings.set(bi.CurrentBuildingIndex, new Building(bi.LoadFile()));//Should work
 		    }
 		});
 		MenuItem mSave = new MenuItem("Save");
@@ -164,7 +177,16 @@ public class BuildingGUI extends Application {
 		});
 		mView.getItems().addAll(mBuilding, mGraph, mtoFit);
 		
-		menuBar.getMenus().addAll(mFile, mView, mHelp);	// menu has File and Help
+		Menu mEdit = new Menu("Edit");
+		MenuItem mBuildingSize = new MenuItem("Building Size");
+		mBuildingSize.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	bi.UserConfigBuildingSize();
+		    }
+		});
+		mEdit.getItems().addAll(mBuildingSize);
+		
+		menuBar.getMenus().addAll(mFile, mEdit, mView, mHelp);	// menu has File and Help
 		
 		return menuBar;					// return the menu, so can be added
 	}
@@ -173,32 +195,40 @@ public class BuildingGUI extends Application {
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		Label Rl = new Label(bi.toString() + "\n" + bi.myBuilding.smokeD.toString() + "\n" + bi.myBuilding.smartLB.toString() + "\n" + bi.myBuilding.smartLift.toString() + "\n" + bi.myBuilding.aircon.toString() + "\n" + bi.myBuilding.motionsens.toString());
-		rtPane.getChildren().add(Rl);				// add label to pane	
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/mm/yyyy");
+		Date date = new Date();
+		String temp = "";
+		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {
+			temp += "\n" + bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).toString();
+		}
+		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp + "\n\nTools");
+		Rl.setWrapText(true);
+		rtPane.getChildren().add(Rl);				// add label to pane
+		toolbarCollection();
 	}
 	
-	public void drawSky() {
-		ltPane.getChildren().clear();					// clear rtpane
-		
-				// now create label
-		//Need to loop for all items in solar system and add to temp 
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-		Date date = new Date();
-		Label Ll = new Label(dateFormat.format(date));
-		Canvas sky = new Canvas(50, canvasSize);
-		secondaryGC = sky.getGraphicsContext2D();
-		Image skyImg = new Image(getClass().getResourceAsStream("DaySkyTransition.png"));
-		secondaryGC.setFill(Color.RED);
-		secondaryGC.fillPolygon(new double[]{20, 20, 30},
-              new double[]{(canvasSize/2) - 5, (canvasSize/2) + 5, canvasSize/2}, 3);
-		if (skyPos == -1440) {
-			skyPos = -360;
-		}
-		skyPos =- 3*((int) t/120);
-		secondaryGC.drawImage(skyImg, 30, skyPos);
-		ltPane.getChildren().add(Ll);
-		ltPane.getChildren().add(sky);				// add label to pane
-	}
+//	public void drawSky() {
+//		ltPane.getChildren().clear();					// clear rtpane
+//		
+//				// now create label
+//		//Need to loop for all items in solar system and add to temp 
+//		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+//		Date date = new Date();
+//		Label Ll = new Label(dateFormat.format(date));
+//		Canvas sky = new Canvas(50, canvasSize);
+//		secondaryGC = sky.getGraphicsContext2D();
+//		Image skyImg = new Image(getClass().getResourceAsStream("DaySkyTransition.png"));
+//		secondaryGC.setFill(Color.RED);
+//		secondaryGC.fillPolygon(new double[]{20, 20, 30},
+//              new double[]{(canvasSize/2) - 5, (canvasSize/2) + 5, canvasSize/2}, 3);
+//		if (skyPos == -1440) {
+//			skyPos = -360;
+//		}
+//		skyPos =- 3*((int) t/120);
+//		secondaryGC.drawImage(skyImg, 30, skyPos);
+//		ltPane.getChildren().add(Ll);
+//		ltPane.getChildren().add(sky);				// add label to pane
+//	}
 	
 	private void SystemPosSet(double x, double y) {
 		// now clear canvas and draw sun and moon
@@ -220,7 +250,7 @@ public class BuildingGUI extends Application {
 	    	       new EventHandler<MouseEvent>() {
 	    	           @Override
 	    	           public void handle(MouseEvent e) {
-	    	        	   SystemPosSet(e.getX(), e.getY());	
+	    	        	   //SystemPosSet(e.getX(), e.getY());	
 	    	        	   		// draw system where mouse clicked
 	    	           }
 	    	       });
@@ -234,7 +264,7 @@ public class BuildingGUI extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				if(SetAnimationRun == true) {
-    				while(!bi.myBuilding.PersonCompletePath()) {//Animate while not final
+    				while(!bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonCompletePath()) {//Animate while not final
     					bi.animate();
     					drawIt();
     				}
@@ -259,6 +289,7 @@ public class BuildingGUI extends Application {
 			btnBottom = new Button("Stop");
 		}
 			// now add handler
+		btnBottom.setTooltip(new Tooltip("Pause Animation"));
 		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -275,7 +306,68 @@ public class BuildingGUI extends Application {
 			}
 		});
 		return btnBottom;
+	 }
+	
+	private Button toolbarAddPerson() {
+		// create button
+		Image buttonIcon = new Image(getClass().getResourceAsStream("personIcon.png"));
+		Button btn = new Button();
+		ImageView imageView = new ImageView(buttonIcon);
+		imageView.setFitWidth(15);
+		imageView.setFitHeight(15);
+		btn.setGraphic(imageView);
+			// now add handler
+		btn.setTooltip(new Tooltip("Add Person to Building {Max 5}"));
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+					
+					
+			}
+		});
+		return btn;
+	 }
+	
+	private Button toolbarGridView() {
+		// create button
+		Image buttonIcon = new Image(getClass().getResourceAsStream("gridIcon.png"));
+		Button btn = new Button();
+		ImageView imageView = new ImageView(buttonIcon);
+		imageView.setFitWidth(15);
+		imageView.setFitHeight(15);
+		btn.setGraphic(imageView);
+			// now add handler
+		btn.setTooltip(new Tooltip("Show grid lines"));
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+					gridViewSwitch = !gridViewSwitch;
+					drawIt();
+			}
+		});
+		return btn;
+	 }
+	
+	private void drawGrid() {
+		double ratio = BuildingtoFit();
+		if (gridViewSwitch == true) {
+			for (int i = 0; i < canvasSize / ratio; i++) {
+				gc.setFill(Color.BLACK);
+				gc.setLineWidth(1);
+				gc.strokeLine(ratio*i, 0, ratio*i, canvasSize);//Vertical
+				gc.strokeLine( 0, ratio*i, canvasSize, ratio*i);//Horizontal
+			}
 		}
+		else;
+	}
+	
+	private void toolbarCollection() {
+		toolbar = new FlowPane();
+		toolbar.getChildren().add(toolbarAddPerson());
+		toolbar.getChildren().add(toolbarGridView());
+		rtPane.getChildren().add(toolbar);
+	}
+	
 	private void setBottomButtons(){
 		btPane.getChildren().clear();
 		btPane.getChildren().add(setAnimateButton());
@@ -309,10 +401,11 @@ public class BuildingGUI extends Application {
 		// now load images of earth and sun
 		// note these should be in package
 	    rtPane = new VBox();
+	    rtPane.setMaxWidth(200);
 	    bp.setRight(rtPane);
 	    
-	    ltPane = new VBox();
-	    bp.setLeft(ltPane);
+//	    ltPane = new VBox();
+//	    bp.setLeft(ltPane);
 	    
 	    btPane = new HBox();
 	    bp.setBottom(btPane);
@@ -328,15 +421,15 @@ public class BuildingGUI extends Application {
 	    	{
 	    		public void handle(long currentNanoTime) {
 	    				// define handle for what do at this time
+	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
+    				drawIt();
+    				drawStatus();
 	    			if (SetAnimationRun == true){
-	    				t = (currentNanoTime - startNanoTime) / 1000000000.0;
-	    				drawIt();
-	    				drawStatus();
-	    				drawSky();
-	    				if (bi.myBuilding.PersonCompletePath()) {
+//	    				drawSky();
+	    				if (bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonCompletePath()) {
 	    					SetAnimationRun = false;
 	    				}
-	    				bi.myBuilding.movePersoninBuilding(bi);
+	    				bi.allBuildings.get(bi.getCurrentBuildingIndex()).movePersoninBuilding(bi);
 //	    				System.out.println(doDisplay());
 	    				try {
 	    					TimeUnit.MILLISECONDS.sleep(250);
@@ -411,10 +504,10 @@ public class BuildingGUI extends Application {
 		//Building outer wall
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(5);
-        gc.strokeLine(1*ratio, 1*ratio, (bi.getBuildingXY()[0]+1)*ratio, 1*ratio); //North wall
-        gc.strokeLine(1*ratio, 1*ratio, 1*ratio, (bi.getBuildingXY()[1]+1)*ratio); //West wall
-        gc.strokeLine((bi.getBuildingXY()[0]+1)*ratio, 1*ratio, (bi.getBuildingXY()[0]+1)*ratio, (bi.getBuildingXY()[1]+1)*ratio); //East wall
-        gc.strokeLine(1*ratio, (bi.getBuildingXY()[1]+1)*ratio, (bi.getBuildingXY()[0]+1)*ratio, (bi.getBuildingXY()[1]+1)*ratio); //South Wall
+        gc.strokeLine(1*ratio, 1*ratio, (bi.getBuildingXY()[1]+1)*ratio, 1*ratio); //North wall
+        gc.strokeLine(1*ratio, 1*ratio, 1*ratio, (bi.getBuildingXY()[0]+1)*ratio); //West wall
+        gc.strokeLine((bi.getBuildingXY()[1]+1)*ratio, 1*ratio, (bi.getBuildingXY()[1]+1)*ratio, (bi.getBuildingXY()[0]+1)*ratio); //East wall
+        gc.strokeLine(1*ratio, (bi.getBuildingXY()[0]+1)*ratio, (bi.getBuildingXY()[1]+1)*ratio, (bi.getBuildingXY()[0]+1)*ratio); //South Wall
         //Room walls
         gc.setStroke(Color.BLACK);
         gc.setLineWidth(2);

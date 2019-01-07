@@ -17,7 +17,7 @@ public class Building {
 	private ArrayList<Room> allRooms;	// array of rooms
 	private Random randGen;				//Random Generator using Random obj
 	private int randRoom;				//Random Room Number
-	public Person occupant;			//Person point P on BuildingDraw
+	//public Person occupant;			//Person point P on BuildingDraw
 	private String OriginalInput; //Original input string for building Constructor to be able to call back for saveing in the building interface
 	private ArrayList<BuildingObject> allBuildingObjects;
 	public BuildingObject smokeD;//Temporary !!!!!!!!!!
@@ -36,27 +36,33 @@ public class Building {
 	
 	Building(String bS){
 		allRooms = new ArrayList<Room>();
-		allRooms.clear(); //Arraylist set uo
+		allRooms.clear(); //Arraylist SETUP
 		allBuildingObjects = new ArrayList<BuildingObject>();
-		allBuildingObjects.clear();
+		allBuildingObjects.clear(); //SETUP
 		allPeople = new ArrayList<Person>();
-		allPeople.clear();
+		allPeople.clear(); //SETUP
+		
 		OriginalInput = bS; //Input saved
 		setBuilding(bS); //Setup the building
 		//System.out.println(allRooms);//Test
 		randGen = new Random(); //Random generator
-		occupant = new Person(allRooms.get(randRoom).getRandom(randGen)); // Occupant start at random point
-		smokeD = new SmokeDetector();//TEMP
-		smartLB = new LightBulb();//TEMP
-		smartLift = new Lift();//TEMP
-		aircon = new AirConditioner();//Temp
-		motionsens = new MotionSensor();//TEMP
-		occupant.PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
-		nextPathPoint(); //Add the list of Point paths for person to follow next
-		allPeople.add(occupant);
+		
+		//occupant = new Person(allRooms.get(randRoom).getRandom(randGen)); // Occupant start at random point
+		
+		//smokeD = new SmokeDetector();//TEMP
+		//smartLB = new LightBulb();//TEMP
+		//smartLift = new Lift();//TEMP
+		//aircon = new AirConditioner();//Temp
+		//motionsens = new MotionSensor();//TEMP
+		//occupant.PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
+		allPeople.add(new Person(allRooms.get(randRoom).getRandom(randGen)));
+		allPeople.get(0).PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
+		nextPathPoint(); //Add the list of Point paths for person to follow next TOFIX
 		allBuildingObjects.add(new SmokeDetector());
 		allBuildingObjects.add(new LightBulb());
-		allBuildingObjects.add(new Lift());//.............
+		allBuildingObjects.add(new Lift());
+		allBuildingObjects.add(new AirConditioner());
+		allBuildingObjects.add(new MotionSensor());
 	}
 	
 	/**
@@ -66,7 +72,7 @@ public class Building {
 	
 	public int PersonInRoom() { /////###Can be changed to have a point argument
 		for (int i = 0; i < allRooms.size(); i++) {//Loop to check all rooms
-			if (allRooms.get(i).isInRoom(occupant.getPersonPoint())) {//if in a room return room number (The position in array)
+			if (allRooms.get(i).isInRoom(allPeople.get(0).getPersonPoint())) {//if in a room return room number (The position in array)
 				return i + 1; //Rooms start from 1 (not 0)
 			}
 		}
@@ -111,6 +117,14 @@ public class Building {
 		return ySize;
 	}
 	
+	public void setBuildingx(int x) {
+		xSize = x;
+	}
+	
+	public void setBuildingy(int y) {
+		ySize = y;
+	}
+	
 	/**
 	 * Outputs Building object information as a string
 	 */
@@ -139,7 +153,7 @@ public class Building {
 	
 	public void showBuilding (BuildingInterface bi) {
 		for (Room r: allRooms) r.showRoom(bi);
-		occupant.showPerson(bi);
+		allPeople.get(0).showPerson(bi);
 		//for (BuildingObject bo : allBuildingObjects) bo.presentGUI();
 	}
 	
@@ -150,7 +164,7 @@ public class Building {
 	 */
 	
 	public void movePersoninBuilding(BuildingInterface bi) {
-		occupant.movePerson(bi);//tell Person class to move and the person can know how to move because it has BuildngDraw
+		allPeople.get(0).movePerson(bi);//tell Person class to move and the person can know how to move because it has BuildngDraw
 	}
 	
 	/**
@@ -159,7 +173,7 @@ public class Building {
 	 */
 	
 	public boolean CheckPersonReachedDestination() {
-		return occupant.DestinationReached(); //Passed to the building Interface
+		return allPeople.get(0).DestinationReached(); //Passed to the building Interface
 	}
 	
 	/**
@@ -172,17 +186,17 @@ public class Building {
 //		occupant.addPointPath(temp);
 //		temp.setLocation((int)allRooms.get(1).getDoorPoint().getX(), (int)allRooms.get(1).getDoorPoint().getY()-1);
 //		occupant.addPointPath(temp);
-		occupant.addPointPath(allRooms.get(PersonInRoom()-1).getDoorOutsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom()));
+		allPeople.get(0).addPointPath(allRooms.get(PersonInRoom()-1).getDoorOutsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom()));
 		/////////////////////////////////////////////////////////////////////////////
-		occupant.addPointPath(allRooms.get(1).getDoorOutsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
-		occupant.addPointPath(allRooms.get(1).getDoorInsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
-		occupant.addPointPath(allRooms.get(1).getRandom(randGen));
-		occupant.addPointPath(allRooms.get(1).getDoorInsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
-		occupant.addPointPath(allRooms.get(1).getDoorOutsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
+		allPeople.get(0).addPointPath(allRooms.get(1).getDoorOutsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
+		allPeople.get(0).addPointPath(allRooms.get(1).getDoorInsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
+		allPeople.get(0).addPointPath(allRooms.get(1).getRandom(randGen));
+		allPeople.get(0).addPointPath(allRooms.get(1).getDoorInsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
+		allPeople.get(0).addPointPath(allRooms.get(1).getDoorOutsidePoint(allRooms.get(1).getDoorPositionRelativetoRoom()));
 		////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		occupant.addPointPath(allRooms.get(2).getDoorOutsidePoint(allRooms.get(2).getDoorPositionRelativetoRoom()));
-		occupant.addPointPath(allRooms.get(2).getDoorInsidePoint(allRooms.get(2).getDoorPositionRelativetoRoom()));
-		occupant.addPointPath(allRooms.get(2).getRandom(randGen));
+		allPeople.get(0).addPointPath(allRooms.get(2).getDoorOutsidePoint(allRooms.get(2).getDoorPositionRelativetoRoom()));
+		allPeople.get(0).addPointPath(allRooms.get(2).getDoorInsidePoint(allRooms.get(2).getDoorPositionRelativetoRoom()));
+		allPeople.get(0).addPointPath(allRooms.get(2).getRandom(randGen));
 //		temp.setLocation((int)allRooms.get(1).getDoorPoint().getX(), (int)allRooms.get(1).getDoorPoint().getY()+1);
 //		occupant.addPointPath(temp);
 //		temp.setLocation((int)allRooms.get(1).getDoorPoint().getX(), (int)allRooms.get(1).getDoorPoint().getY()-1);
@@ -200,7 +214,7 @@ public class Building {
 	 */
 	
 	public boolean PersonCompletePath() {
-		return occupant.CompletePath();//Works as is, sent to BuildingInterface
+		return allPeople.get(0).CompletePath();//Works as is, sent to BuildingInterface
 	}
 	
 	/**
@@ -227,6 +241,9 @@ public class Building {
 		return allRooms;
 	}
 	
+	public ArrayList<Person> getAllPeople(){
+		return allPeople;
+	}
 	/**
 	 * Building test main
 	 * @param args
