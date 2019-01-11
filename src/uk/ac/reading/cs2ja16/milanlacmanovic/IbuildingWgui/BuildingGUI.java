@@ -518,7 +518,10 @@ public class BuildingGUI extends Application {
             gc.strokeLine((bi.getAllRooms().get(i).getDoorCoords()[3]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[0]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[3]+1)*ratio, (bi.getAllRooms().get(i).getDoorCoords()[2]+1)*ratio); //South Wall
         }
         //need to cut out doors
-		
+        for (int i = 0; i < bi.getAllRooms().size(); i++) {
+        	//gc.fillRect(((bi.getAllRooms().get(i).getDoorCoords()[5])*ratio)+ratio-(0.5*ratio),  ((bi.getAllRooms().get(i).getDoorCoords()[4])*ratio)+ratio-(0.5*ratio),  ratio,  ratio);//TEST
+        	gc.clearRect(((bi.getAllRooms().get(i).getDoorCoords()[5])*ratio)+ratio-(0.5*ratio),  ((bi.getAllRooms().get(i).getDoorCoords()[4])*ratio)+ratio-(0.5*ratio),  ratio,  ratio);
+        }
 	}
         private void drawWindow(GraphicsContext gc) {
 //    		double ratio = BuildingtoFit();

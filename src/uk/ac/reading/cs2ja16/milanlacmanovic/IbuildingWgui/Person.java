@@ -25,8 +25,9 @@ public class Person {
 	
 	Person(int x, int y){
 		PersonPosition = new Point(x,y); //Initialise the Point Object
-//		PointPath = new ArrayList<Point>();
-//		PointPath.clear();
+		PointPath = new ArrayList<Point>();
+		PointPath.clear();
+		
 	}
 	
 	/**
@@ -38,6 +39,8 @@ public class Person {
 	
 	Person(Point random) {
 		PersonPosition = random; //Assign Random Point position (from building class)
+		PointPath = new ArrayList<Point>();
+		PointPath.clear();
 	}
 	
 	/**
@@ -104,11 +107,11 @@ public class Person {
 	 * @param p Point
 	 */
 	
-	public void PointSet(Point p) {
-		PointPath = new ArrayList<Point>();
-		PointPath.clear();
-		PointPath.add(p);
-	}
+//	public void PointSet(Point p) {
+//		PointPath = new ArrayList<Point>();
+//		PointPath.clear();
+//		PointPath.add(p);
+//	}
 	
 	/**
 	 * Moves Person by calculating the dx and dy. Then converts these values to

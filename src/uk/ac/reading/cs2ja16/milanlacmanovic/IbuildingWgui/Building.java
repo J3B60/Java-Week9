@@ -56,7 +56,7 @@ public class Building {
 		//motionsens = new MotionSensor();//TEMP
 		//occupant.PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
 		allPeople.add(new Person(allRooms.get(randRoom).getRandom(randGen)));
-		allPeople.get(0).PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
+//USES POINT SET	//allPeople.get(0).PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
 		nextPathPoint(); //Add the list of Point paths for person to follow next TOFIX
 		allBuildingObjects.add(new SmokeDetector());
 		allBuildingObjects.add(new LightBulb());
