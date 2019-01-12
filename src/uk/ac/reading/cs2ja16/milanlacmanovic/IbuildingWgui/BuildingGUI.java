@@ -52,8 +52,11 @@ public class BuildingGUI extends Application {
     private boolean SetAnimationRun = false;
     private Random rgen = new Random();
     BuildingInterface bi = new BuildingInterface();
-    private int skyPos = -360;
+    //private int skyPos = -360;
     private Boolean gridViewSwitch = false;
+    private Boolean setPersonPosSwitch = false;
+    private Boolean setObjectPosSwitch = false;
+    
 
     long startNanoTime = System.nanoTime();
     /**
@@ -230,9 +233,9 @@ public class BuildingGUI extends Application {
 //		ltPane.getChildren().add(sky);				// add label to pane
 //	}
 	
-	private void SystemPosSet(double x, double y) {
+	private void ItemPosSet(double x, double y) {
 		// now clear canvas and draw sun and moon
-		gc.clearRect(0,  0,  canvasSize,  canvasSize);		// clear canvas
+		//gc.clearRect(0,  0,  canvasSize,  canvasSize);		// clear canvas
 		//////################								// give its position 
 	}
 	
@@ -250,7 +253,7 @@ public class BuildingGUI extends Application {
 	    	       new EventHandler<MouseEvent>() {
 	    	           @Override
 	    	           public void handle(MouseEvent e) {
-	    	        	   //SystemPosSet(e.getX(), e.getY());	
+	    	        	   ItemPosSet(e.getX(), e.getY());	
 	    	        	   		// draw system where mouse clicked
 	    	           }
 	    	       });
@@ -424,18 +427,18 @@ public class BuildingGUI extends Application {
 	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
     				drawIt();
     				drawStatus();
-	    			if (SetAnimationRun == true){
+	    			if (SetAnimationRun == true && t%0.250 == 0){
 //	    				drawSky();
 	    				if (bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonCompletePath()) {
 	    					SetAnimationRun = false;
 	    				}
 	    				bi.allBuildings.get(bi.getCurrentBuildingIndex()).movePersoninBuilding(bi);
 //	    				System.out.println(doDisplay());
-	    				try {
-	    					TimeUnit.MILLISECONDS.sleep(250);
-	    				} catch (InterruptedException e) {
-	    					e.printStackTrace();
-	    				}
+//	    				try {
+//	    					TimeUnit.MILLISECONDS.sleep(250);
+//	    				} catch (InterruptedException e) {
+//	    					e.printStackTrace();
+//	    				}
 	    			}
 	    			else{
 	    				//######################
@@ -459,8 +462,10 @@ public class BuildingGUI extends Application {
 	
 	public void drawPerson(int x, int y){
 		double ratio = BuildingtoFit();
-		gc.setFill(Color.RED);
-		gc.fillOval((y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);//*0.8 ratio just to get person to be smaller than door
+		//gc.setFill(Color.RED);
+		//gc.fillOval((y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);//*0.8 ratio just to get person to be smaller than door
+		Image temp = new Image(getClass().getResourceAsStream("Person.png"));
+		gc.drawImage(temp, (y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);
 	}
 	
 	public void drawObject(Image i, double x, double y){

@@ -229,4 +229,8 @@ public class Person {
 	public Boolean getPathisCompleted() {
 		return PathisCompleted;
 	}
+	
+//	public void presentGUI(BuildingGUI bg) {
+//		bg.drawObject(getImage(), getXPosition(), getYPosition());	
+//	}
 }
