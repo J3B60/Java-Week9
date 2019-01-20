@@ -381,7 +381,62 @@ public class BuildingInterface {
 		}
 		
 	}
-	
+
+public void delPerson() {
+	String userIn = JOptionPane.showInputDialog(null, "Enter Person Number");
+	allBuildings.get(CurrentBuildingIndex).deletePerson(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
+}
+
+public void delRoom() {
+	String userIn = JOptionPane.showInputDialog(null, "Enter Room Number");
+	allBuildings.get(CurrentBuildingIndex).deleteRoom(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
+}
+
+public void  addFloor() {
+	allBuildings.add(new Building(buildingString(1)));
+}
+
+public void delFloor() {
+	String userIn = JOptionPane.showInputDialog(null, "Enter Building Number");
+	int valueIn = JOptionPane.showConfirmDialog(null, null, "Warning: This will delete all items on floor", JOptionPane.OK_CANCEL_OPTION);
+	if (valueIn == JOptionPane.OK_OPTION) {
+		if (Integer.parseInt(userIn) -1 < allBuildings.size()) {
+			allBuildings.remove(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Building does not exist, please enter valid Building Number", "Error",  JOptionPane.ERROR_MESSAGE);
+		}
+	}
+}
+
+public void moveUpFloor() {
+	if (CurrentBuildingIndex < allBuildings.size()-1) {
+		CurrentBuildingIndex++;
+	}
+}
+
+public void moveDownFloor() {
+	if (CurrentBuildingIndex > 0) {
+		CurrentBuildingIndex--;
+	}
+}
+
+public void delObject() {
+	String userIn = JOptionPane.showInputDialog(null, "Enter Object ID Number");
+	allBuildings.get(CurrentBuildingIndex).deleteObject(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
+}
+
+public void addObject() {
+	String[] choices = {"Air Conditioner","Heater","Lift","Light Bulb","Motion Sensor","Smoke Detector", "Window"}; 
+	String input = (String) JOptionPane.showInputDialog(null, "Choose now...",
+		        "The Choice of a Lifetime", JOptionPane.QUESTION_MESSAGE, null, // Use
+		                                                                        // default
+		                                                                        // icon
+		        choices, // Array of choices
+		        choices[0]); // Initial choice MUST HAVE INITIAL CHOICE
+	allBuildings.get(CurrentBuildingIndex).addObject(input);
+}
+
 //	/**
 //	 * Main for the whole program, starts Building Interface constructor
 //	 * @param args

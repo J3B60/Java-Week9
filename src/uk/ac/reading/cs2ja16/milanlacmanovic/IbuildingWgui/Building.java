@@ -297,6 +297,62 @@ public class Building {
 		}
 	}
 	
+	public void deletePerson(int i) {
+		if (i+1 <= allPeople.size() && i>0) {
+			allPeople.remove(i);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Person does not exist, please enter valid Person Number", "Error",  JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void deleteRoom(int i) {
+		if (i+1 <= allRooms.size() && i>0) {
+			allRooms.remove(i);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Room does not exist, please enter valid Room Number", "Error",  JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void deleteObject(int i) {
+		if (i+1 <= allBuildingObjects.size() && i>0) {
+			allBuildingObjects.remove(i);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "Object does not exist, please enter valid Object ID Number", "Error",  JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	public void addObject(String s) {//TODO change to not be in default POS allBO.get(last) {which is the new object} then .setXPos(), .setYPos() <- come from JOption Input, if ok set, if cancelled JOption then in default position {default position will cause problems}
+		switch (s) {
+		case "Air Conditioner":
+			allBuildingObjects.add(new AirConditioner());
+			break;
+		case "Heater":
+			allBuildingObjects.add(new Heater());
+			break;
+		case "Lift":
+			allBuildingObjects.add(new Lift());
+			break;
+		case "Light Bulb":
+			allBuildingObjects.add(new LightBulb());
+			break;
+		case "Motion Sensor":
+			allBuildingObjects.add(new MotionSensor());
+			break;
+		case "Smoke Detector":
+			allBuildingObjects.add(new SmokeDetector());
+			break;
+		case "Window":
+			allBuildingObjects.add(new Window());
+			break;
+		default:
+			JOptionPane.showMessageDialog(null, "Bad Object, Should not happen, nothing added", "Error",  JOptionPane.ERROR_MESSAGE);
+			break;
+		}
+	}
+	
 //	public static void main(String[] args) {
 //		Building b = new Building("11 11;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6"); 
 //		System.out.println(b.toString());
