@@ -266,16 +266,14 @@ public class BuildingGUI extends Application {
 		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				if(SetAnimationRun == true) {
-    				while(!bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonCompletePath()) {//Animate while not final
-    					bi.animate();
-    					drawIt();
-    				}
-				}
-				else {
-					SetAnimationRun = true;
-				}
-				setBottomButtons();
+				//if(SetAnimationRun == true && !bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonCompletePath()) {
+//    				while(!bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonCompletePath()) {//Animate while not final
+    			
+//						bi.animate();
+//    					drawIt();
+//    				}
+//				}
+				SetAnimationRun = true;
 					// and its action to draw earth at random angle
 			}
 		});
@@ -284,36 +282,49 @@ public class BuildingGUI extends Application {
 	
 	private Button setPauseButton() {
 		// create button
-		Button btnBottom = new Button("ERROR");
-		if(SetAnimationRun == true) {
-			btnBottom = new Button("Pause");
-		}
-		else {
-			btnBottom = new Button("Stop");
-		}
+	Button btnBottom = new Button("Pause");
 			// now add handler
-		btnBottom.setTooltip(new Tooltip("Pause Animation"));
-		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				if (SetAnimationRun == false) {
-					startNanoTime = System.nanoTime();
-					SetAnimationRun = false;
-					drawSystem(t);
-				}
-				else {
-					SetAnimationRun = false;
-				}
-				setBottomButtons();
-					// and its action to draw earth at random angle
-			}
-		});
-		return btnBottom;
-	 }
+	btnBottom.setOnAction(new EventHandler<ActionEvent>() {
+		@Override
+		public void handle(ActionEvent event) {
+			SetAnimationRun = false;
+		}
+	});
+	return btnBottom;
+}
+	
+//	private Button setPauseButton() {
+//		// create button
+//		Button btnBottom = new Button("ERROR");
+//		if(SetAnimationRun == true) {
+//			btnBottom = new Button("Pause");
+//		}
+//		else {
+//			btnBottom = new Button("Stop");
+//		}
+//			// now add handler
+//		btnBottom.setTooltip(new Tooltip("Pause Animation"));
+//		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
+//			@Override
+//			public void handle(ActionEvent event) {
+//				if (SetAnimationRun == false) {
+//					startNanoTime = System.nanoTime();
+//					SetAnimationRun = false;
+//					drawSystem(t);
+//				}
+//				else {
+//					SetAnimationRun = false;
+//				}
+//				setBottomButtons();
+//					// and its action to draw earth at random angle
+//			}
+//		});
+//		return btnBottom;
+//	 }
 	
 	private Button toolbarAddPerson() {
 		// create button
-		Image buttonIcon = new Image(getClass().getResourceAsStream("personIcon.png"));
+		Image buttonIcon = new Image(getClass().getResourceAsStream("AddpersonIcon.png"));
 		Button btn = new Button();
 		ImageView imageView = new ImageView(buttonIcon);
 		imageView.setFitWidth(15);
@@ -330,6 +341,27 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
+	
+	private Button toolbarAddRoom() {
+		// create button
+		Image buttonIcon = new Image(getClass().getResourceAsStream("AddRoom.png"));
+		Button btn = new Button();
+		ImageView imageView = new ImageView(buttonIcon);
+		imageView.setFitWidth(15);
+		imageView.setFitHeight(15);
+		btn.setGraphic(imageView);
+			// now add handler
+		btn.setTooltip(new Tooltip("Add room"));
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				bi.addRoom();
+			}
+		});
+		return btn;
+	 }
+	
+	
 	
 	private Button toolbarGridView() {
 		// create button
@@ -368,6 +400,7 @@ public class BuildingGUI extends Application {
 		toolbar = new FlowPane();
 		toolbar.getChildren().add(toolbarAddPerson());
 		toolbar.getChildren().add(toolbarGridView());
+		toolbar.getChildren().add(toolbarAddRoom());
 		rtPane.getChildren().add(toolbar);
 	}
 	

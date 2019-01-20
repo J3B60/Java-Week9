@@ -15,19 +15,19 @@ public abstract class BuildingObject {
 	/**
 	 * Unique object ID
 	 */
-	static int objectID;
+	protected static int objectID;
 	/**
 	 * object Name
 	 */
-	String objectName;
+	protected String objectName;
 	/**
 	 * object Image
 	 */
-	Image objectImage;
+	protected Image objectImage;
 	/**
 	 * object position #######(should add a check that its a valid position)
 	 */
-	Point objectPosition;
+	protected Point objectPosition;
 	/**
 	 * Draw to main Canvas
 	 * @param bg

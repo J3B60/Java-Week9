@@ -4,9 +4,9 @@ import java.awt.Point;
 
 import javafx.scene.image.Image;
 
-public class Radiator extends BuildingObject {
+public class Heater extends BuildingObject {
 
-	Radiator(){
+	Heater(){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("Radiator.jpg"));
 		objectName = "Radiator - " + String.valueOf(objectID);

@@ -33,7 +33,7 @@ public class BuildingInterface {
 	 * return as String definition of bOpt'th building
 	 * @param bOpt
 	 */
-	public String buildingString (int bOpt) {
+	private String buildingString (int bOpt) {
 		if (bOpt == 1) {
 			//return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
 			return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6";//building size can be same size as max room coord dimensions
@@ -229,15 +229,15 @@ public class BuildingInterface {
 	 */
 	
 	public void animate() {
-		while (!allBuildings.get(CurrentBuildingIndex).CheckPersonReachedDestination()) {
+//		while (!allBuildings.get(CurrentBuildingIndex).CheckPersonReachedDestination()) {
 			allBuildings.get(CurrentBuildingIndex).movePersoninBuilding(this);
 //			System.out.println(doDisplay());
-			try {
-				TimeUnit.MILLISECONDS.sleep(250);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//			try {
+//				TimeUnit.MILLISECONDS.sleep(250);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
 	}
 	
 	/**
@@ -357,6 +357,29 @@ public class BuildingInterface {
 	
 	public void setCurrentBuildingIndex(int x) {
 		CurrentBuildingIndex = x;
+	}
+	
+	public void  addRoom() {
+		String dim = "";
+		JTextField xField = new JTextField(5);
+		JTextField yField = new JTextField(5);
+		JPanel myPanel = new JPanel();
+		myPanel.add(new JLabel("x:"));
+	    myPanel.add(xField);
+	    myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+	    myPanel.add(new JLabel("y:"));
+	    myPanel.add(yField);
+		int valueIn = JOptionPane.showConfirmDialog(null, myPanel, "Enter Room opposing Corner Coordinates", JOptionPane.OK_CANCEL_OPTION);
+		if (valueIn == JOptionPane.OK_OPTION) {
+		    if (!(xField.getText() == "" || yField.getText() == "")) {//NOT
+		    	allBuildings.get(CurrentBuildingIndex).setBuildingx(Integer.parseInt(xField.getText()));
+		    	allBuildings.get(CurrentBuildingIndex).setBuildingy(Integer.parseInt(yField.getText()));
+		    	dim = xField.getText() + " " + yField.getText(); 
+		    	allBuildings.get(CurrentBuildingIndex).addRoom(dim);
+		    	showBuildingWall();
+		    }
+		}
+		
 	}
 	
 //	/**

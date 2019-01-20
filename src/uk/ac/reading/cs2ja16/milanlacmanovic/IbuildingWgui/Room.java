@@ -24,6 +24,11 @@ public class Room{
 		StringSplitter SS = new StringSplitter(S, " "); //String Splitter for user input
 		roomCoord = SS.getIntegers(); //Integer Array from string splitter copied
 	}
+	
+	Room (int x, int y, int xx, int yy, int xd, int yd){
+		roomCoord = new int[] {x,y,xx,yy,xd,yd};
+	}
+	
 	/**
 	 * Returns the information in the Room co-ordinate array as a String
 	 * @return roomCoord as String
