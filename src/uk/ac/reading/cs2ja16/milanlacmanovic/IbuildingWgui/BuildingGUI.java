@@ -510,6 +510,44 @@ public class BuildingGUI extends Application {
 		return btn;
 	 }
 	
+	private Button toolbarAddObject() {
+		// create button
+		Image buttonIcon = new Image(getClass().getResourceAsStream("AddObj.png"));
+		Button btn = new Button();
+		ImageView imageView = new ImageView(buttonIcon);
+		imageView.setFitWidth(15);
+		imageView.setFitHeight(15);
+		btn.setGraphic(imageView);
+			// now add handler
+		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				bi.addObject();
+			}
+		});
+		return btn;
+	 }
+	
+	private Button toolbarDelObject() {
+		// create button
+		Image buttonIcon = new Image(getClass().getResourceAsStream("DelObj.png"));
+		Button btn = new Button();
+		ImageView imageView = new ImageView(buttonIcon);
+		imageView.setFitWidth(15);
+		imageView.setFitHeight(15);
+		btn.setGraphic(imageView);
+			// now add handler
+		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				bi.delObject();
+			}
+		});
+		return btn;
+	 }
+	
 	private void toolbarCollection() {
 		toolbar = new FlowPane();
 		toolbar.getChildren().add(toolbarGridView());
@@ -521,6 +559,8 @@ public class BuildingGUI extends Application {
 		toolbar.getChildren().add(toolbarDelRoom());
 		toolbar.getChildren().add(toolbarAddFloor());
 		toolbar.getChildren().add(toolbarDelFloor());
+		toolbar.getChildren().add(toolbarAddObject());
+		toolbar.getChildren().add(toolbarDelObject());
 		rtPane.getChildren().add(toolbar);
 	}
 	
