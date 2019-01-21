@@ -58,6 +58,9 @@ public class BuildingInterface {
 	 	* I displays information on the building such as Building size, rooms + coordinates and which room the person is currently in
 	 	* X exits the program
 	 */
+	/**
+	 * Setup BuildingInterface
+	 */
 	public BuildingInterface() {
 //		s = new Scanner(System.in);	// set up scanner for user input
 	    int bno = 1;			// initially building 1 selected
@@ -135,7 +138,10 @@ public class BuildingInterface {
 	 * the image is less warped looking.
 	 * @return String containing
 	 */
-	
+	/**
+	 * Char representation of building
+	 * @return
+	 */
 	public String doDisplay() {
 		BuildingDraw = new char[allBuildings.get(CurrentBuildingIndex).getBuildingx() +2][allBuildings.get(CurrentBuildingIndex).getBuildingy() + 2]; //Switched x and y around//Setup char array to size of building
 		String temp = "";
@@ -155,13 +161,15 @@ public class BuildingInterface {
 	}
 	
 	/**
-	 * Places the # character to display the building boundaries in the Building Draw array.
-	 * This creates a box or rectangle with gaps in the center and endge of #
+	 * toString to pass the currentBuildings Information
 	 */
-	
 	public String toString(){
 		return allBuildings.get(CurrentBuildingIndex).toString();
 	}
+	/**
+	 * Places the # character to display the building boundaries in the Building Draw array.
+	 * This creates a box or rectangle with gaps in the center and endge of #
+	 */
 	
 	public void showBuildingWall() {
 		Arrays.fill(BuildingDraw[0], '#'); //Fill top
@@ -249,7 +257,11 @@ public class BuildingInterface {
 	public char[][] getBuildingDraw(){
 		return BuildingDraw;
 	}
-	
+	/**
+	 * Like getBuildingDraw Above but specifically for objects in the building, (stops from messing with person, blocking paths) 
+	 * People may be in the same position as an object but this is suitable in many cases such as lifts, light bulbs etc. Cases where this might not be ideal are heaters.
+	 * @return
+	 */
 	public char[][] getBuildingDrawObjects(){
 		return BuildingDrawObjects;
 	}
@@ -258,12 +270,17 @@ public class BuildingInterface {
 	 * Window allowing for user to input a string for Building. No checks if the String is valid
 	 * @return
 	 */
-	
+	/**
+	 * User inputs new Building using the Building string format
+	 * @return
+	 */
 	public String UserInputBuilding() {
 		String userIn = JOptionPane.showInputDialog(null, "Enter Building using format [Bx By; R1x1 R1y1 R1x2 R1y2 R1Dx R1Dy; ...]");
 		return userIn;
 	}
-	
+	/**
+	 * User configured building size, keeping the original contents inside, has a check that its not smaller than rooms or cutting rooms out
+	 */
 	public void UserConfigBuildingSize() {
 		JTextField xField = new JTextField(5);
 		JTextField yField = new JTextField(5);
@@ -309,7 +326,7 @@ public class BuildingInterface {
 	/**
 	 * Allows user to choose a file from storage to be read into a string 
 	 * which is then passed to the building. There are no checks for string validity
-	 * @return
+	 * @return LoadFile
 	 */
 	
 	public String LoadFile() {
@@ -336,29 +353,45 @@ public class BuildingInterface {
 		}
 		return temp;
 	}
-	
+	/**
+	 * Getter for all Building Rooms
+	 * @return
+	 */
 	public ArrayList<Room> getAllRooms(){
 		return allBuildings.get(CurrentBuildingIndex).getAllRooms();
 	}
-	
+	/**
+	 * getter for building sizes into an int array
+	 * @return
+	 */
 	public int[] getBuildingXY() {
 		int[] bsize = {allBuildings.get(CurrentBuildingIndex).getBuildingx(), allBuildings.get(CurrentBuildingIndex).getBuildingy()};
 		return bsize;
 	}
-	
+	/**
+	 * draws building objects
+	 */
 	private void drawBuildingObjects(){
 		BuildingDrawObjects[allBuildings.get(CurrentBuildingIndex).getAllBuildingObjects().get(0).getXPosition()][allBuildings.get(CurrentBuildingIndex).getAllBuildingObjects().get(0).getYPosition()] = 'S';//Test to jet first
 		
 	}
-	
+	/**
+	 * getter for current building
+	 * @return
+	 */
 	public int getCurrentBuildingIndex() {
 		return CurrentBuildingIndex;
 	}
-	
+	/**
+	 * setter for current building
+	 * @param NewCurrentBuildingIndex
+	 */
 	public void setCurrentBuildingIndex(int x) {
 		CurrentBuildingIndex = x;
 	}
-	
+	/**
+	 * Add room to the current building, making sure that the input is within building
+	 */
 	public void  addRoom() {
 		String dim = "";
 		JTextField xField = new JTextField(5);
@@ -381,21 +414,29 @@ public class BuildingInterface {
 		}
 		
 	}
-
+/**
+ * delete a specified person. JOptionPane used to input choice
+ */
 public void delPerson() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Person Number");
 	allBuildings.get(CurrentBuildingIndex).deletePerson(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 }
-
+/**
+ * delete a specified room. JOptionPane used to input choice
+ */
 public void delRoom() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Room Number");
 	allBuildings.get(CurrentBuildingIndex).deleteRoom(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 }
-
+/** 
+ * add a new building, sets up the default building for new building
+ */
 public void  addFloor() {
 	allBuildings.add(new Building(buildingString(1)));
 }
-
+/**
+ * Delete a specified building or floor, with major warnings to prevent accidental data loss
+ */
 public void delFloor() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Building Number");
 	int valueIn = JOptionPane.showConfirmDialog(null, null, "Warning: This will delete all items on floor", JOptionPane.OK_CANCEL_OPTION);
@@ -408,24 +449,32 @@ public void delFloor() {
 		}
 	}
 }
-
+/**
+ * Move up a floor in the in the Interface to synchronise with GUI
+ */
 public void moveUpFloor() {
 	if (CurrentBuildingIndex < allBuildings.size()-1) {
 		CurrentBuildingIndex++;
 	}
 }
-
+/**
+ * Move down a floor in the in the Interface to synchronise with GUI
+ */
 public void moveDownFloor() {
 	if (CurrentBuildingIndex > 0) {
 		CurrentBuildingIndex--;
 	}
 }
-
+/**
+ * delete a specified object using JOptionPane
+ */
 public void delObject() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Object ID Number");
 	allBuildings.get(CurrentBuildingIndex).deleteObject(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 }
-
+/**
+ * add a specified object
+ */
 public void addObject() {
 	String[] choices = {"Air Conditioner","Heater","Lift","Light Bulb","Motion Sensor","Smoke Detector", "Window"}; 
 	String input = (String) JOptionPane.showInputDialog(null, "Choose now...",
@@ -435,6 +484,12 @@ public void addObject() {
 		        choices, // Array of choices
 		        choices[0]); // Initial choice MUST HAVE INITIAL CHOICE
 	allBuildings.get(CurrentBuildingIndex).addObject(input);
+}
+/**
+ * Add a person in a random position in the current building
+ */
+public void addPerson() {
+	allBuildings.get(CurrentBuildingIndex).addPerson();
 }
 
 //	/**

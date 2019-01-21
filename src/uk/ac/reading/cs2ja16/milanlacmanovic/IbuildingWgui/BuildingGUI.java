@@ -42,42 +42,42 @@ import java.util.Date;
 
 public class BuildingGUI extends Application {
 	int canvasSize = 512;				// constants for relevant sizes
-	double t;
-    GraphicsContext gc;
-    GraphicsContext secondaryGC;
+	double t;//time
+    GraphicsContext gc;//Main GUI of Building
+    GraphicsContext secondaryGC;//For DaySkyCycle
 //    private VBox ltPane;
-    private VBox rtPane;
-    private FlowPane toolbar;
-    private HBox btPane;
-    private boolean SetAnimationRun = false;
+    private VBox rtPane;//to hold the Building Status
+    private FlowPane toolbar;//Toolbar consisting of editing options for Building
+    private HBox btPane;//Start,Pause
+    private boolean SetAnimationRun = false;//Animation Switch
     private Random rgen = new Random();
-    BuildingInterface bi = new BuildingInterface();
+    BuildingInterface bi = new BuildingInterface();//Building Interface
     //private int skyPos = -360;
-    private Boolean gridViewSwitch = false;
-    private Boolean setPersonPosSwitch = false;
-    private Boolean setObjectPosSwitch = false;
+    private Boolean gridViewSwitch = false;//Grid view switch for main Building GUI
+    private Boolean setPersonPosSwitch = false;//Mouse click the position of Person
+    private Boolean setObjectPosSwitch = false;//Mouse click the postion of Object
     
 
-    long startNanoTime = System.nanoTime();
+    long startNanoTime = System.nanoTime();//SYSTEM TIME
     /**
-     * drawIt ... draws object defined by given image at position and size
-     * @param i
-     * @param x
-     * @param y
-     * @param sz
+     * Draws the objects, people, building and everything else for the main building GUI canvas
      */
-	public void drawIt () {
-		gc.clearRect(0,  0,  canvasSize,  canvasSize);
-		drawLines(gc);
-		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().size(); i++) {
+	public void drawIt () {//Draw all required items to main Building GUI
+		gc.clearRect(0,  0,  canvasSize,  canvasSize);//Initialise
+		drawLines(gc);//Building & Room Lines
+		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().size(); i++) {//Draw all People
 			bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(i).showPersonGUI(this);
 		}
-		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i++) {
+		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i++) {//Draw all Objects
 			bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).presentGUI(this);
 		}
-		drawGrid();
+		drawGrid();//check to draw grid view 
 	}
-	
+	/**
+	 * Used to display message windows	
+	 * @param TStr
+	 * @param CStr
+	 */
 	private void showMessage(String TStr, String CStr) {
 	    Alert alert = new Alert(AlertType.INFORMATION);
 	    alert.setTitle(TStr);
@@ -87,37 +87,39 @@ public class BuildingGUI extends Application {
 	    alert.showAndWait();
 }
 /**
- * function to show in a box ABout the programme
+ * function to show a About box About the program
  */
  private void showAbout() {
 	 showMessage("About", "Intelligent Building demo by Milan Lacmanovic");
  }
     /**
-	 * function to show in a box ABout the programme
+	 * function to show a Help box for information about using the program
 	 */
-	 private void showHelp() {
+	 private void showHelp() {//TODO
 		 showMessage("Help", "TODO once all options from 'bi' class added");
 	 }
  
-	
+	/**
+	 * Setup the Menubar for main GUI window
+	 */
 	MenuBar setMenu() {
 		MenuBar menuBar = new MenuBar();		// create menu
 
 		Menu mHelp = new Menu("Help");			// have entry for help
 				// then add sub menus for About and Help
 				// add the item and then the action to perform
-		MenuItem mAbout = new MenuItem("About");
+		MenuItem mAbout = new MenuItem("About");//
 		mAbout.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-            	showAbout();				// show the about message
+            	showAbout();				// show the about message Window
             }	
 		});
 		MenuItem miHelp = new MenuItem("Help");
 		miHelp.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-            	showHelp();
+            	showHelp();//Message Window
             }	
 		});
 		mHelp.getItems().addAll(mAbout, miHelp); 	// add submenus to Help
@@ -127,19 +129,19 @@ public class BuildingGUI extends Application {
 		MenuItem mNew = new MenuItem("New");
 		mNew.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	bi.UserInputBuilding();
+		    	bi.UserInputBuilding();//From old code
 		    }
 		});
 		MenuItem mOpen = new MenuItem("Open");
 		mOpen.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		        bi.allBuildings.set(bi.CurrentBuildingIndex, new Building(bi.LoadFile()));//Should work
+		        bi.allBuildings.set(bi.CurrentBuildingIndex, new Building(bi.LoadFile()));//Works from old code
 		    }
 		});
 		MenuItem mSave = new MenuItem("Save");
 		mSave.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		        bi.SaveFile();
+		        bi.SaveFile();//From old code
 		    }
 		});
 		MenuItem mExit = new MenuItem("Exit");
@@ -154,13 +156,13 @@ public class BuildingGUI extends Application {
 		MenuItem mGraph = new MenuItem("Graph");
 		MenuItem mBuilding = new MenuItem("Building");
 		MenuItem mtoFit = new MenuItem("Fit to Screen");
-		mBuilding.setDisable(true);
+		mBuilding.setDisable(true);//For switching Views
 		mGraph.setDisable(false);
 		mBuilding.setDisable(false);
 		mGraph.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
 		    	//TODO graph FUNCTION goes Here
-		    	mBuilding.setDisable(false);
+		    	mBuilding.setDisable(false);//Switch to Graph View
 		    	mtoFit.setDisable(true);
 		    	mGraph.setDisable(true);
 		    }
@@ -168,14 +170,14 @@ public class BuildingGUI extends Application {
 		mBuilding.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
 		    	//TODO return to Building view FUNCTION goes Here
-		    	mBuilding.setDisable(true);
+		    	mBuilding.setDisable(true);//Switching View to Main Building GUI
 		    	mtoFit.setDisable(false);
 		    	mGraph.setDisable(false);
 		    }
 		});
 		mtoFit.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	BuildingtoFit();
+		    	BuildingtoFit();//In-case of future Zoom In, Out Function
 		    }
 		});
 		mView.getItems().addAll(mBuilding, mGraph, mtoFit);
@@ -184,7 +186,7 @@ public class BuildingGUI extends Application {
 		MenuItem mBuildingSize = new MenuItem("Building Size");
 		mBuildingSize.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	bi.UserConfigBuildingSize();
+		    	bi.UserConfigBuildingSize();//Edit current building size, New code, maybe unstable
 		    }
 		});
 		mEdit.getItems().addAll(mBuildingSize);
@@ -194,6 +196,10 @@ public class BuildingGUI extends Application {
 		return menuBar;					// return the menu, so can be added
 	}
 	
+	
+	/**
+	 * Display up to date, time and info on building in the right pane. NOTE displays only for current building
+	 */
 	public void drawStatus() {
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
@@ -201,13 +207,13 @@ public class BuildingGUI extends Application {
 		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/mm/yyyy");
 		Date date = new Date();
 		String temp = "";
-		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {
+		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {//Get all info for current building
 			temp += "\n" + bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).toString();
 		}
-		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp + "\n\nToolbar");
+		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp + "\n\nToolbar");//Finish label
 		Rl.setWrapText(true);
 		rtPane.getChildren().add(Rl);				// add label to pane
-		toolbarCollection();
+		toolbarCollection();//Toolbar for editing building
 	}
 	
 //	public void drawSky() {
@@ -248,17 +254,24 @@ public class BuildingGUI extends Application {
 		//##############################################
 	}
 	
+	/**
+	 * Get Mouse X and Y positions and use for input depending on current situation based on switchs 
+	 * @param canvas
+	 */
 	private void setMouseEvents (Canvas canvas) {
 	       canvas.addEventHandler(MouseEvent.MOUSE_PRESSED, 
 	    	       new EventHandler<MouseEvent>() {
 	    	           @Override
 	    	           public void handle(MouseEvent e) {
-	    	        	   ItemPosSet(e.getX(), e.getY());	
+	    	        	   ItemPosSet(e.getX(), e.getY());	//TODO Temporary
 	    	        	   		// draw system where mouse clicked
 	    	           }
 	    	       });
 	}
-	
+	/**
+	 * Animates the main Building GUI allowing people to move
+	 * @return Animate Button
+	 */
 	private Button setAnimateButton() {
 			// create button
 		Button btnBottom = new Button("Animate");
@@ -279,7 +292,10 @@ public class BuildingGUI extends Application {
 		});
 		return btnBottom;
 	}
-	
+	/**
+	 * Pauses Animation
+	 * @return
+	 */
 	private Button setPauseButton() {
 		// create button
 	Button btnBottom = new Button("Pause");
@@ -321,7 +337,10 @@ public class BuildingGUI extends Application {
 //		});
 //		return btnBottom;
 //	 }
-	
+	/**
+	 * Add Person in a random position in current building
+	 * @return Add Random Person Button
+	 */
 	private Button toolbarAddPerson() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("AddpersonIcon.png"));
@@ -335,13 +354,15 @@ public class BuildingGUI extends Application {
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-					
-					
+					bi.addPerson();
 			}
 		});
 		return btn;
 	 }
-	
+	/**
+	 * Add a room by specified Co-ords, checks are done to make sure it is inside building
+	 * @return Add Room by Co-ord Button
+	 */
 	private Button toolbarAddRoom() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("AddRoom.png"));
@@ -361,8 +382,10 @@ public class BuildingGUI extends Application {
 		return btn;
 	 }
 	
-	
-	
+	/**
+	 *Toggle GridView on main Building GUI 
+	 * @return Toggle Grid Button
+	 */
 	private Button toolbarGridView() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("gridIcon.png"));
@@ -382,7 +405,9 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * Draw grid if toggled on by button
+	 */
 	private void drawGrid() {
 		double ratio = BuildingtoFit();
 		if (gridViewSwitch == true) {
@@ -395,7 +420,10 @@ public class BuildingGUI extends Application {
 		}
 		else;
 	}
-
+	/**
+	 * Delete a person specified by Number
+	 * @return Delete Person Num Button
+	 */
 	private Button toolbarDelPerson() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("DelpersonIcon.png"));
@@ -414,7 +442,10 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * Delete a room specified by number
+	 * @return Delete Room Num Button
+	 */
 	private Button toolbarDelRoom() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("DelRoom.png"));
@@ -433,7 +464,10 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * Add a new Building/Floor
+	 * @return Add Building Button
+	 */
 	private Button toolbarAddFloor() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("AddFloor.png"));
@@ -452,7 +486,10 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * Delete the Building/Floor by number
+	 * @return Delete Building Num Button
+	 */
 	private Button toolbarDelFloor() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("DelFloor.png"));
@@ -471,7 +508,10 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * adjust the view in main building view to see the floor above or next building
+	 * @return Move up Floor Button
+	 */
 	private Button toolbarMoveUpFloor() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("UpFloor.png"));
@@ -490,7 +530,10 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * adjust the view in main building view to see the floor below or previous building
+	 * @return Move Down Floor Button
+	 */
 	private Button toolbarMoveDownFloor() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("DownFloor.png"));
@@ -510,6 +553,10 @@ public class BuildingGUI extends Application {
 		return btn;
 	 }
 	
+	/**
+	 * Add a selected object to building
+	 * @return Add Object Button
+	 */
 	private Button toolbarAddObject() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("AddObj.png"));
@@ -528,7 +575,10 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * Delete specified object by ID number
+	 * @return Delete Object Button
+	 */
 	private Button toolbarDelObject() {
 		// create button
 		Image buttonIcon = new Image(getClass().getResourceAsStream("DelObj.png"));
@@ -547,7 +597,9 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
-	
+	/**
+	 * Collects all the toolbar options and puts them into a flow pane then into a pane
+	 */
 	private void toolbarCollection() {
 		toolbar = new FlowPane();
 		toolbar.getChildren().add(toolbarGridView());
@@ -563,7 +615,9 @@ public class BuildingGUI extends Application {
 		toolbar.getChildren().add(toolbarDelObject());
 		rtPane.getChildren().add(toolbar);
 	}
-	
+	/**
+	 * sets up the bottom buttons for animation
+	 */
 	private void setBottomButtons(){
 		btPane.getChildren().clear();
 		btPane.getChildren().add(setAnimateButton());
@@ -571,7 +625,7 @@ public class BuildingGUI extends Application {
 		
 	}
 	/**
-	 * main function ... sets up canvas, menu, buttons and timer
+	 * main function ... sets up canvas, menu, buttons, timer all other GUI stuff
 	 */
 	@Override
 	public void start(Stage stagePrimary) throws Exception {
@@ -652,7 +706,11 @@ public class BuildingGUI extends Application {
 		ratio = canvasSize/ratio; //Ratio is optimal size to show all of building in canvas at once
 		return ratio;
 	}
-	
+	/**
+	 * Draws Person image in selected position
+	 * @param x
+	 * @param y
+	 */
 	public void drawPerson(int x, int y){
 		double ratio = BuildingtoFit();
 		//gc.setFill(Color.RED);
@@ -660,12 +718,20 @@ public class BuildingGUI extends Application {
 		Image temp = new Image(getClass().getResourceAsStream("Person.png"));
 		gc.drawImage(temp, (y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio*0.8, ratio*0.8);
 	}
-	
+	/**
+	 * Draws any building object in a defined position
+	 * @param image
+	 * @param x
+	 * @param y
+	 */
 	public void drawObject(Image i, double x, double y){
 		double ratio = BuildingtoFit();
 		gc.drawImage(i, (y*ratio)+ratio*0.5, (x*ratio)+ratio*0.5, ratio, ratio);//Bs
 	}
-	
+	/**
+	 * Draws the Building walls, room walls and cuts out door holes. should be drawn before everything else
+	 * @param gc
+	 */
 	private void drawLines(GraphicsContext gc) {
 		double ratio = BuildingtoFit();
 //		gc.setFill(Color.BLUE);
@@ -721,7 +787,11 @@ public class BuildingGUI extends Application {
         	gc.clearRect(((bi.getAllRooms().get(i).getDoorCoords()[5])*ratio)+ratio-(0.5*ratio),  ((bi.getAllRooms().get(i).getDoorCoords()[4])*ratio)+ratio-(0.5*ratio),  ratio,  ratio);
         }
 	}
-        private void drawWindow(GraphicsContext gc) {
+	/**
+	 * Draw a Window
+	 * @param gc
+	 */
+       private void drawWindow(GraphicsContext gc) {
 //    		double ratio = BuildingtoFit();
 //    		gc.setFill(Color.BLUE);
 //            gc.setStroke(Color.BLACK);
@@ -752,15 +822,25 @@ public class BuildingGUI extends Application {
 //                         new double[]{210, 210, 240, 240}, 4);
 //        gc.strokePolyline(new double[]{110, 140, 110, 140},
 //                          new double[]{210, 210, 240, 240}, 4);
-	
+	/**
+	 * Getter for canvas size 
+	 * @return canvasSize
+	 */
 	public int getCanvasSize(){
 		return canvasSize;
 	}
 	
+	/**
+	 * Getter for Building Ratio## unnecessary?!?!
+	 * @return Building toFit Ratio
+	 */
 	public double getRatio() {
 		return BuildingtoFit();
 	}
-	
+	/**
+	 * GUI MAIN
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Application.launch(args);			// launch the GUI
 	}

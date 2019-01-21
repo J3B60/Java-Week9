@@ -119,11 +119,17 @@ public class Building {
 	public int getBuildingy() { //Return the Building y dimension
 		return ySize;
 	}
-	
+	/**
+	 * setter for Building Size X
+	 * @param Building xSize
+	 */
 	public void setBuildingx(int x) {
 		xSize = x;
 	}
-	
+	/**
+	 * Setter for Building Size Y
+	 * @param Building ySize
+	 */
 	public void setBuildingy(int y) {
 		ySize = y;
 	}
@@ -235,11 +241,17 @@ public class Building {
 				break;
 		}
 	}
-	
+	/**
+	 * Selects random action for the person to do. Either go to new point in current room or go through doors to get to next new room
+	 * @return
+	 */
 	private int ActionRandomSelect() {
 		return randGen.nextInt(2);
 	}
-	
+	/**
+	 * Select random person to move/add new points to follow
+	 * @return
+	 */
 	private int PersonRandomSelect() {
 		return randGen.nextInt(allPeople.size());
 	}
@@ -278,15 +290,18 @@ public class Building {
 	public ArrayList<Room> getAllRooms(){
 		return allRooms;
 	}
-	
+	/**
+	 * get copy of all people in building()
+	 * @return
+	 */
 	public ArrayList<Person> getAllPeople(){
 		return allPeople;
 	}
+
 	/**
-	 * Building test main
-	 * @param args
+	 * Add a specified room
+	 * @param dimensions
 	 */
-	
 	public void addRoom(String dim) {
 		StringSplitter s = new StringSplitter(dim, " ");
 		if (s.getIntegers()[0] <= xSize && s.getIntegers()[2] <= xSize && s.getIntegers()[1] <= ySize && s.getIntegers()[3] <= ySize) {//Would need more checks such as rooms, so that they dont overlap, check that person is outside of new room area to prevent problems, such as PersonInRoom or making room wall ontop of person.//Can be moved to Room class, would need to pass building size, people and other rooms for checks
@@ -296,7 +311,10 @@ public class Building {
 			JOptionPane.showMessageDialog(null, "Invalid Room", "Error",  JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+	/**
+	 * Delete a specified person
+	 * @param i
+	 */
 	public void deletePerson(int i) {
 		if (i+1 <= allPeople.size() && i>0) {
 			allPeople.remove(i);
@@ -305,7 +323,10 @@ public class Building {
 			JOptionPane.showMessageDialog(null, "Person does not exist, please enter valid Person Number", "Error",  JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+	/**
+	 * Delete a specified room
+	 * @param i
+	 */
 	public void deleteRoom(int i) {
 		if (i+1 <= allRooms.size() && i>0) {
 			allRooms.remove(i);
@@ -314,7 +335,10 @@ public class Building {
 			JOptionPane.showMessageDialog(null, "Room does not exist, please enter valid Room Number", "Error",  JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+	/**
+	 * Delete a specified object
+	 * @param i
+	 */
 	public void deleteObject(int i) {
 		if (i+1 <= allBuildingObjects.size() && i>0) {
 			allBuildingObjects.remove(i);
@@ -323,9 +347,12 @@ public class Building {
 			JOptionPane.showMessageDialog(null, "Object does not exist, please enter valid Object ID Number", "Error",  JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+	/**
+	 * Add a specified object
+	 * @param s
+	 */
 	public void addObject(String s) {//TODO change to not be in default POS allBO.get(last) {which is the new object} then .setXPos(), .setYPos() <- come from JOption Input, if ok set, if cancelled JOption then in default position {default position will cause problems}
-		switch (s) {
+		switch (s) {//Could set default Pos to random like Person Random Pos
 		case "Air Conditioner":
 			allBuildingObjects.add(new AirConditioner());
 			break;
@@ -352,7 +379,16 @@ public class Building {
 			break;
 		}
 	}
-	
+	/**
+	 * Add New Person in a random position, called by BuildingInterface,BuildingGUI
+	 */
+	public void addPerson() {
+		allPeople.add(new Person(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+	}
+	/**
+	 * Building test main
+	 * @param args
+	 */
 //	public static void main(String[] args) {
 //		Building b = new Building("11 11;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6"); 
 //		System.out.println(b.toString());
