@@ -210,7 +210,7 @@ public class BuildingGUI extends Application {
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {//Get all info for current building
 			temp += "\n" + bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).toString();
 		}
-		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp);//Finish label
+		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp + "\n\n" + t);//Finish label
 		Rl.setWrapText(true);
 		rtPane.getChildren().add(Rl);				// add label to pane
 	}
@@ -712,10 +712,7 @@ public class BuildingGUI extends Application {
     				drawStatus();
 	    			if (SetAnimationRun == true && t%0.250 == 0){
 //	    				drawSky();
-	    				if (bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonCompletePath()) {
-	    					SetAnimationRun = false;
-	    				}
-	    				bi.allBuildings.get(bi.getCurrentBuildingIndex()).movePersoninBuilding(bi);
+	    				bi.animate();
 //	    				System.out.println(doDisplay());
 //	    				try {
 //	    					TimeUnit.MILLISECONDS.sleep(250);

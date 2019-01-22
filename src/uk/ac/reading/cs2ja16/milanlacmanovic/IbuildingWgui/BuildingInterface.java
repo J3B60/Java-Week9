@@ -154,9 +154,9 @@ public class BuildingInterface {
 			temp += "\n";
 		}
 			//NOTE TO SELF: X and Y are flipped, because x,y to j,i not i,j (matricies notation)
-//		for (int k = 0; k < BuildingDraw.length; k++) { //TEST //OUTPUTS AS ARRAY View
-//			System.out.println(Arrays.toString(BuildingDraw[k]));//Test
-//		}//TEST
+		for (int k = 0; k < BuildingDraw.length; k++) { //TEST //OUTPUTS AS ARRAY View
+			System.out.println(Arrays.toString(BuildingDraw[k]));//Test
+		}//DEBUG ONLY TEST
 		return temp;
 	}
 	
@@ -239,7 +239,7 @@ public class BuildingInterface {
 	public void animate() {
 //		while (!allBuildings.get(CurrentBuildingIndex).CheckPersonReachedDestination()) {
 			allBuildings.get(CurrentBuildingIndex).movePersoninBuilding(this);
-//			System.out.println(doDisplay());
+			System.out.println(doDisplay());//DEBUG ONLY
 //			try {
 //				TimeUnit.MILLISECONDS.sleep(250);
 //			} catch (InterruptedException e) {

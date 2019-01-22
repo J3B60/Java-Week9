@@ -126,38 +126,44 @@ public class Person {
 	 * @param bi
 	 */
 	
-	public void movePerson(BuildingInterface bi) {
+	public boolean movePerson(BuildingInterface bi) {//boolean if the path has ended
 		int dx = 0, dy = 0;
 		int movex = 0, movey =0;
 		if(index < PointPath.size()) {
 			if (PersonPosition != PointPath.get(index)) {
 				dx = (int) PersonPosition.getX() - (int) PointPath.get(index).getX();
 				dy = (int) PersonPosition.getY() - (int) PointPath.get(index).getY();
-			}//Checks if space is empty to move into however diagonals screw it up, checks are only 
-			//done horizontal and vertical, however person can move diagonal which is not checked for so the PointPath 
-			//must be clearly defined to inside, outside door
-			if (dx > 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()][(int) PersonPosition.getY()+1] == ' ') {
-				movex = -1;
-			}
-			else if (dx < 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()+2][(int) PersonPosition.getY()+1] == ' '){
-				movex = 1;
+				//Checks if space is empty to move into however diagonals screw it up, checks are only 
+				//done horizontal and vertical, however person can move diagonal which is not checked for so the PointPath 
+				//must be clearly defined to inside, outside door
+				if (dx > 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()][(int) PersonPosition.getY()+1] == ' ') {
+					movex = -1;
+				}
+				else if (dx < 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()+2][(int) PersonPosition.getY()+1] == ' '){
+					movex = 1;
+				}
+				else {
+					movex = 0;
+				}
+				if (dy > 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()+1][(int) PersonPosition.getY()] == ' ') {
+					movey = -1;
+				}
+				else if (dy < 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()+1][(int) PersonPosition.getY()+2] == ' '){
+					movey = 1;
+				}
+				else {
+					movey = 0;
+				}
+				PersonPosition.translate(movex, movey);
+				
 			}
 			else {
-				movex = 0;
+				index++;
 			}
-			if (dy > 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()+1][(int) PersonPosition.getY()] == ' ') {
-				movey = -1;
-			}
-			else if (dy < 0 && bi.getBuildingDraw()[(int) PersonPosition.getX()+1][(int) PersonPosition.getY()+2] == ' '){
-				movey = 1;
-			}
-			else {
-				movey = 0;
-			}
-			PersonPosition.translate(movex, movey);
+			return false;
 		}
-		else {
-			PathisCompleted = true;//Not Used
+		else{
+			return true;
 		}
 	}
 	
@@ -191,14 +197,14 @@ public class Person {
 	 * @return
 	 */
 	
-	public boolean CompletePath() {
-		if (PointPath.size() == index) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
+//	public boolean CompletePath() {
+//		if (PointPath.size() == index) {
+//			return true;
+//		}
+//		else {
+//			return false;
+//		}
+//	}
 	
 //	public void CheckDoorType(BuildingInterface bi) {
 //		if (bi.getBuildingDraw()[(int)PointPath.get(index).getX() + 1 ][(int)PointPath.get(index).getY()] == '-' && bi.getBuildingDraw()[(int)PointPath.get(index).getX() - 1 ][(int)PointPath.get(index).getY()] == '-') {
@@ -229,9 +235,9 @@ public class Person {
 	 * @return
 	 */
 	
-	public Boolean getPathisCompleted() {
-		return PathisCompleted;
-	}
+//	public Boolean getPathisCompleted() {
+//		return PathisCompleted;
+//	}
 	
 //	public void presentGUI(BuildingGUI bg) {
 //		bg.drawObject(getImage(), getXPosition(), getYPosition());	

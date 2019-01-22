@@ -60,7 +60,7 @@ public class Building {
 		//occupant.PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
 		allPeople.add(new Person(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 //USES POINT SET	//allPeople.get(0).PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
-		nextPathPoint(); //Add the list of Point paths for person to follow next TOFIX
+		//nextPathPoint(); //Add the list of Point paths for person to follow next TOFIX
 		allBuildingObjects.add(new SmokeDetector());
 		allBuildingObjects.add(new LightBulb());
 		allBuildingObjects.add(new Lift());
@@ -175,8 +175,10 @@ public class Building {
 	 * @param bi
 	 */
 	
-	public void movePersoninBuilding(BuildingInterface bi) {
-		allPeople.get(0).movePerson(bi);//tell Person class to move and the person can know how to move because it has BuildngDraw
+	public void movePersoninBuilding(BuildingInterface bi) {//Moves All people
+		for (int i = 0; i < allPeople.size(); i++){
+			if (allPeople.get(i).movePerson(bi)) nextPathPoint(i);//tell Person class to move and the person can know how to move because it has BuildngDraw
+		}
 	}
 	
 	/**
@@ -184,15 +186,15 @@ public class Building {
 	 * @return
 	 */
 	
-	public boolean CheckPersonReachedDestination() {
-		return allPeople.get(0).DestinationReached(); //Passed to the building Interface
-	}
+//	public boolean CheckPersonReachedDestination() {
+//		return allPeople.get(0).DestinationReached(); //Passed to the building Interface
+//	}
 	
 	/**
 	 * Adds all the point required for the path to the Person PointPath arraylist (this can be edited to be point by point if required by using an index in building)
 	 */
 	
-	public void nextPathPoint() {
+	public void nextPathPoint(int Personindex) {
 		Point temp = new Point(0,0);
 //		temp.setLocation((int)allRooms.get(0).getDoorPoint().getX()+1, (int)allRooms.get(1).getDoorPoint().getY());
 //		occupant.addPointPath(temp);
@@ -220,24 +222,24 @@ public class Building {
 //		occupant.addPointPath(allRooms.get(2).getDoorPoint());
 //		occupant.addPointPath(allRooms.get(2).getRandom(randGen));
 		int randomAction = ActionRandomSelect();
-		int randomPerson = PersonRandomSelect();
+//		int randomPerson = PersonRandomSelect();
 		int randomRoom = RoomRandomSelect();
 		switch (randomAction) {
 			case 0: //Leave current Room and enter next
 				//Get to this rooms inner side door and outer side door
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getDoorInsidePoint(allRooms.get(PersonInRoom(randomPerson)-1).getDoorPositionRelativetoRoom()));
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getDoorOutsidePoint(allRooms.get(PersonInRoom(randomPerson)-1).getDoorPositionRelativetoRoom()));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getDoorInsidePoint(allRooms.get(PersonInRoom(Personindex)-1).getDoorPositionRelativetoRoom()));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getDoorOutsidePoint(allRooms.get(PersonInRoom(Personindex)-1).getDoorPositionRelativetoRoom()));
 				//Get to Next Room inner side door and outer side door
-				allPeople.get(randomPerson).addPointPath(allRooms.get(randomRoom).getDoorOutsidePoint(allRooms.get(randomRoom).getDoorPositionRelativetoRoom()));
-				allPeople.get(randomPerson).addPointPath(allRooms.get(randomRoom).getDoorInsidePoint(allRooms.get(randomRoom).getDoorPositionRelativetoRoom()));
+				allPeople.get(Personindex).addPointPath(allRooms.get(randomRoom).getDoorOutsidePoint(allRooms.get(randomRoom).getDoorPositionRelativetoRoom()));
+				allPeople.get(Personindex).addPointPath(allRooms.get(randomRoom).getDoorInsidePoint(allRooms.get(randomRoom).getDoorPositionRelativetoRoom()));
 				break;
 			default: //Random point in same Room
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getRandom(randGen));
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getRandom(randGen));
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getRandom(randGen));
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getRandom(randGen));
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getRandom(randGen));
-				allPeople.get(randomPerson).addPointPath(allRooms.get(PersonInRoom(randomPerson)-1).getRandom(randGen));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getRandom(randGen));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getRandom(randGen));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getRandom(randGen));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getRandom(randGen));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getRandom(randGen));
+				allPeople.get(Personindex).addPointPath(allRooms.get(PersonInRoom(Personindex)-1).getRandom(randGen));
 				break;
 		}
 	}
@@ -252,9 +254,9 @@ public class Building {
 	 * Select random person to move/add new points to follow
 	 * @return
 	 */
-	private int PersonRandomSelect() {
-		return randGen.nextInt(allPeople.size());
-	}
+//	private int PersonRandomSelect() {
+//		return randGen.nextInt(allPeople.size());
+//	}
 	
 	
 	/**
@@ -262,10 +264,10 @@ public class Building {
 	 * final destination
 	 * @return
 	 */
-	
-	public boolean PersonCompletePath() {//now not for more than one person
-		return allPeople.get(0).CompletePath();//Works as is, sent to BuildingInterface
-	}
+//	
+//	public boolean PersonCompletePath() {//now not for more than one person
+//		return allPeople.get(0).CompletePath();//Works as is, sent to BuildingInterface
+//	}
 	
 	/**
 	 * Gets the Original string input to Building Constructor to be able to take current 
