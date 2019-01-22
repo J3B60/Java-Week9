@@ -58,4 +58,10 @@ public class AirConditioner extends BuildingObject{
 		}
 		return -1; //If not found then return -1
 	}
+
+	@Override
+	public void Activate() {
+		// TODO Auto-generated method stub
+		
+	}
 }

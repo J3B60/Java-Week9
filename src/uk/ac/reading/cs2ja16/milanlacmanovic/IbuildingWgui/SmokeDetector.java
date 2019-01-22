@@ -63,5 +63,8 @@ public class SmokeDetector extends BuildingObject {
 		}
 		return -1; //If not found then return -1
 	}
+	public void Activate(){
+		
+	}
 	
 }

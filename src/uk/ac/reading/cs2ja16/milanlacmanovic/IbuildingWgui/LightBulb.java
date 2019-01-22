@@ -7,7 +7,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class LightBulb extends BuildingObject {
-	Boolean powerSwitch = false;
 	LightBulb(){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("Light-bulb.png"));
@@ -52,14 +51,6 @@ public class LightBulb extends BuildingObject {
 	public void setPosition(Point pobjectPosition){
 		objectPosition = pobjectPosition;
 	}
-	private void switchLight() {
-		if (powerSwitch == false) {
-			powerSwitch = true;
-		}
-		else {
-			powerSwitch = false;
-		}
-	}
 	public int objectInRoom(Building myBuilding) {
 		for (int i = 0; i < myBuilding.getAllRooms().size(); i++) {//Loop to check all rooms
 			if (myBuilding.getAllRooms().get(i).isInRoom(objectPosition)) {//if in a room return room number (The position in array)
@@ -72,5 +63,8 @@ public class LightBulb extends BuildingObject {
 		bg.gc.setFill(Color.YELLOW);
 		bg.gc.fillRect(myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[0], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[1], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[2], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[3]);
 		//NEED TO ADD slightly off centre because of line thickness, NEED RATIO bg.getRatio()
+	}
+	public void Activate(){
+		//drawLight();
 	}
 }

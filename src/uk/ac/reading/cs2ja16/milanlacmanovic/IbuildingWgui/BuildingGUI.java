@@ -45,7 +45,7 @@ public class BuildingGUI extends Application {
 	double t;//time
     GraphicsContext gc;//Main GUI of Building
     GraphicsContext secondaryGC;//For DaySkyCycle
-//    private VBox ltPane;
+    private VBox ltPane;
     private VBox rtPane;//to hold the Building Status
     private FlowPane toolbar;//Toolbar consisting of editing options for Building
     private HBox btPane;//Start,Pause
@@ -200,7 +200,7 @@ public class BuildingGUI extends Application {
 	/**
 	 * Display up to date, time and info on building in the right pane. NOTE displays only for current building
 	 */
-	public void drawStatus() {
+	public void drawStatus() {//TODO fix people
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
@@ -210,10 +210,23 @@ public class BuildingGUI extends Application {
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {//Get all info for current building
 			temp += "\n" + bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).toString();
 		}
-		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp + "\n\nToolbar");//Finish label
+		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp);//Finish label
 		Rl.setWrapText(true);
 		rtPane.getChildren().add(Rl);				// add label to pane
-		toolbarCollection();//Toolbar for editing building
+	}
+	
+	/**
+	 * Display Toolbar in leftpane
+	 */
+	public void drawToolbar(VBox pane) {//TODO fix people
+		pane.getChildren().clear();					// clear rtpane
+				// now create label
+		//Need to loop for all items in solar system and add to temp 
+		
+		Label Ll = new Label("\n\nToolbar");//Finish label
+		Ll.setWrapText(true);
+		pane.getChildren().add(Ll);				// add label to pane
+		toolbarCollection(pane);//Toolbar for editing building
 	}
 	
 //	public void drawSky() {
@@ -276,6 +289,7 @@ public class BuildingGUI extends Application {
 			// create button
 		Button btnBottom = new Button("Animate");
 				// now add handler
+		btnBottom.setTooltip(new Tooltip("Run Building GUI"));
 		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -300,6 +314,7 @@ public class BuildingGUI extends Application {
 		// create button
 	Button btnBottom = new Button("Pause");
 			// now add handler
+	btnBottom.setTooltip(new Tooltip("Pause Animation"));
 	btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 		@Override
 		public void handle(ActionEvent event) {
@@ -350,7 +365,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Add Person to Building {Max 5}"));
+		btn.setTooltip(new Tooltip("Add Person"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -455,7 +470,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setTooltip(new Tooltip("Delete a Room"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -477,7 +492,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setTooltip(new Tooltip("Add a Floor"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -499,7 +514,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setTooltip(new Tooltip("Delete a Floor"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -521,7 +536,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setTooltip(new Tooltip("Up Floor"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -543,7 +558,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setTooltip(new Tooltip("Down Floor"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -566,7 +581,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setTooltip(new Tooltip("Add an Object"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -588,7 +603,7 @@ public class BuildingGUI extends Application {
 		imageView.setFitHeight(15);
 		btn.setGraphic(imageView);
 			// now add handler
-		btn.setTooltip(new Tooltip("Delete a Person"));
+		btn.setTooltip(new Tooltip("Delete an Object"));
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
@@ -597,10 +612,28 @@ public class BuildingGUI extends Application {
 		});
 		return btn;
 	 }
+	private Button toolbarMoveObject() {
+		// create button
+		Image buttonIcon = new Image(getClass().getResourceAsStream("MoveIcon.png"));
+		Button btn = new Button();
+		ImageView imageView = new ImageView(buttonIcon);
+		imageView.setFitWidth(15);
+		imageView.setFitHeight(15);
+		btn.setGraphic(imageView);
+			// now add handler
+		btn.setTooltip(new Tooltip("Move an Object"));
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				bi.moveObject();
+			}
+		});
+		return btn;
+	 }
 	/**
 	 * Collects all the toolbar options and puts them into a flow pane then into a pane
 	 */
-	private void toolbarCollection() {
+	private void toolbarCollection(VBox pane) {
 		toolbar = new FlowPane();
 		toolbar.getChildren().add(toolbarGridView());
 		toolbar.getChildren().add(toolbarMoveUpFloor());
@@ -613,7 +646,8 @@ public class BuildingGUI extends Application {
 		toolbar.getChildren().add(toolbarDelFloor());
 		toolbar.getChildren().add(toolbarAddObject());
 		toolbar.getChildren().add(toolbarDelObject());
-		rtPane.getChildren().add(toolbar);
+		toolbar.getChildren().add(toolbarMoveObject());
+		pane.getChildren().add(toolbar);
 	}
 	/**
 	 * sets up the bottom buttons for animation
@@ -654,13 +688,15 @@ public class BuildingGUI extends Application {
 	    rtPane.setMaxWidth(200);
 	    bp.setRight(rtPane);
 	    
-//	    ltPane = new VBox();
-//	    bp.setLeft(ltPane);
+	    ltPane = new VBox();
+	    ltPane.setMaxWidth(95);
+	    bp.setLeft(ltPane);
+	    drawToolbar(ltPane);
 	    
 	    btPane = new HBox();
 	    bp.setBottom(btPane);
 	    setBottomButtons();
-	    Scene scene = new Scene(bp, canvasSize*1.4, canvasSize*1.2);
+	    Scene scene = new Scene(bp, canvasSize*1.6, canvasSize*1.2);
 	    stagePrimary.setScene( scene );
 	    stagePrimary.show();
 //	    final long startNanoTime = System.nanoTime();

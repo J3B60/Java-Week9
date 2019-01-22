@@ -59,4 +59,13 @@ public class Lift extends BuildingObject {
 		}
 		return -1; //If not found then return -1
 	}
+	public void liftPerson(){
+		
+	}
+
+	@Override
+	public void Activate() {
+		// TODO Auto-generated method stub
+		
+	}
 }

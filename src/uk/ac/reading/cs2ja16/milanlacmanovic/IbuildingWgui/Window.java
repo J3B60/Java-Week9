@@ -61,4 +61,10 @@ public class Window extends BuildingObject {
 	}
 	//Day -> then Light in Room
 
+	@Override
+	public void Activate() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

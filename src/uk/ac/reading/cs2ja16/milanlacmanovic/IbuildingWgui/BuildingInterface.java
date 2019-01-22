@@ -153,7 +153,7 @@ public class BuildingInterface {
 			}
 			temp += "\n";
 		}
-			//NOTE TO SELF: X and Y are flipped, because x,y to j,i not i,j (matricies notation) TODO FIX
+			//NOTE TO SELF: X and Y are flipped, because x,y to j,i not i,j (matricies notation)
 //		for (int k = 0; k < BuildingDraw.length; k++) { //TEST //OUTPUTS AS ARRAY View
 //			System.out.println(Arrays.toString(BuildingDraw[k]));//Test
 //		}//TEST
@@ -419,14 +419,14 @@ public class BuildingInterface {
  */
 public void delPerson() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Person Number");
-	allBuildings.get(CurrentBuildingIndex).deletePerson(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
+	if (userIn != null)allBuildings.get(CurrentBuildingIndex).deletePerson(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 }
 /**
  * delete a specified room. JOptionPane used to input choice
  */
 public void delRoom() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Room Number");
-	allBuildings.get(CurrentBuildingIndex).deleteRoom(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
+	if (userIn != null)allBuildings.get(CurrentBuildingIndex).deleteRoom(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 }
 /** 
  * add a new building, sets up the default building for new building
@@ -442,6 +442,7 @@ public void delFloor() {
 	int valueIn = JOptionPane.showConfirmDialog(null, null, "Warning: This will delete all items on floor", JOptionPane.OK_CANCEL_OPTION);
 	if (valueIn == JOptionPane.OK_OPTION) {
 		if (Integer.parseInt(userIn) -1 < allBuildings.size()) {
+			CurrentBuildingIndex -= 1;
 			allBuildings.remove(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 		}
 		else {
@@ -470,20 +471,40 @@ public void moveDownFloor() {
  */
 public void delObject() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Object ID Number");
-	allBuildings.get(CurrentBuildingIndex).deleteObject(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
+	if (userIn != null)allBuildings.get(CurrentBuildingIndex).deleteObject(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 }
 /**
  * add a specified object
  */
 public void addObject() {
 	String[] choices = {"Air Conditioner","Heater","Lift","Light Bulb","Motion Sensor","Smoke Detector", "Window"}; 
-	String input = (String) JOptionPane.showInputDialog(null, "Choose now...",
-		        "The Choice of a Lifetime", JOptionPane.QUESTION_MESSAGE, null, // Use
+	String input = (String) JOptionPane.showInputDialog(null, "Choose Object",
+		        "Add Object", JOptionPane.QUESTION_MESSAGE, null, // Use
 		                                                                        // default
 		                                                                        // icon
 		        choices, // Array of choices
 		        choices[0]); // Initial choice MUST HAVE INITIAL CHOICE
-	allBuildings.get(CurrentBuildingIndex).addObject(input);
+
+	if (input != null) allBuildings.get(CurrentBuildingIndex).addObject(input);
+}
+
+public void moveObject() {
+	String dim = "";
+	JTextField xField = new JTextField(5);
+	JTextField yField = new JTextField(5);
+	JPanel myPanel = new JPanel();
+	myPanel.add(new JLabel("x:"));
+    myPanel.add(xField);
+    myPanel.add(Box.createHorizontalStrut(15)); // a spacer
+    myPanel.add(new JLabel("y:"));
+    myPanel.add(yField);
+    String userIn = JOptionPane.showInputDialog(null, "Enter Object ID Number");
+	int valueIn = JOptionPane.showConfirmDialog(null, myPanel, "Enter Room opposing Corner Coordinates", JOptionPane.OK_CANCEL_OPTION);
+	if (valueIn == JOptionPane.OK_OPTION && userIn != null) {
+	    if (!(xField.getText() == "" || yField.getText() == "")) {//NOT
+	    	allBuildings.get(CurrentBuildingIndex).setObjectPos(Integer.parseInt(userIn) -1, Integer.parseInt(xField.getText()), Integer.parseInt(yField.getText()));
+	    }
+	}
 }
 /**
  * Add a person in a random position in the current building

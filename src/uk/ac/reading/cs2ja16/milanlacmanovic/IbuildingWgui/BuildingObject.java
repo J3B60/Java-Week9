@@ -89,4 +89,6 @@ public abstract class BuildingObject {
 	 * @return object Room 
 	 */
 	abstract public int objectInRoom(Building myBuilding);
+	
+	abstract public void Activate();
 }

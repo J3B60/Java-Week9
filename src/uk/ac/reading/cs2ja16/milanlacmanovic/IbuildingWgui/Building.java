@@ -385,6 +385,18 @@ public class Building {
 	public void addPerson() {
 		allPeople.add(new Person(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 	}
+	
+	public void setObjectPos(int index, int x, int y){//Only move object if in the correct position
+		Point p = new Point(x,y);
+		boolean objectInARoom = false;
+		for (int i = 0; i < allRooms.size(); i++){
+			objectInARoom = allRooms.get(i).isInRoom(p);
+			if (objectInARoom == true){
+				allBuildingObjects.get(index).setPosition(p);
+				break;
+			}
+		}
+	}
 	/**
 	 * Building test main
 	 * @param args

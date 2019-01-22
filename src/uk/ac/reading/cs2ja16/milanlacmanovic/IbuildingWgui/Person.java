@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 
 public class Person {
+	static int PersonID;
 	private Point PersonPosition; //Person point
 	private ArrayList<Point> PointPath; //Persons Path List
 	private int index=0; //Index for the PointPath ArrayList
@@ -24,6 +25,7 @@ public class Person {
 	 */
 	
 	Person(int x, int y){
+		PersonID++;
 		PersonPosition = new Point(x,y); //Initialise the Point Object
 		PointPath = new ArrayList<Point>();
 		PointPath.clear();
@@ -38,6 +40,7 @@ public class Person {
 	 */
 	
 	Person(Point random) {
+		PersonID++;
 		PersonPosition = random; //Assign Random Point position (from building class)
 		PointPath = new ArrayList<Point>();
 		PointPath.clear();
