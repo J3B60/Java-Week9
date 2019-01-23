@@ -36,7 +36,8 @@ public class BuildingInterface {
 	private String buildingString (int bOpt) {
 		if (bOpt == 1) {
 			//return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
-			return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6";//building size can be same size as max room coord dimensions
+			//return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6";//building size can be same size as max room coord dimensions
+			return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6\n40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";//building size can be same size as max room coord dimensions
 		}
 		else {
 			return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
@@ -66,7 +67,10 @@ public class BuildingInterface {
 	    int bno = 1;			// initially building 1 selected
 	    allBuildings = new ArrayList<Building>();
 	    allBuildings.clear();
-	    allBuildings.add(new Building(buildingString(bno)));// create building
+	    StringSplitter S = new StringSplitter(buildingString(bno), "\n");//Multi building save
+	    for(int i = 0; i < S.getStrings().length; i++) {
+	    	allBuildings.add(new Building(S.getStrings()[i]));// create building
+	    }
 	    doDisplay();//Pre draw building
 	    BuildingDrawObjects = getBuildingDraw();
 	    drawBuildingObjects();
@@ -154,9 +158,9 @@ public class BuildingInterface {
 			temp += "\n";
 		}
 			//NOTE TO SELF: X and Y are flipped, because x,y to j,i not i,j (matricies notation)
-		for (int k = 0; k < BuildingDraw.length; k++) { //TEST //OUTPUTS AS ARRAY View
-			System.out.println(Arrays.toString(BuildingDraw[k]));//Test
-		}//DEBUG ONLY TEST
+//		for (int k = 0; k < BuildingDraw.length; k++) { //TEST //OUTPUTS AS ARRAY View
+//			System.out.println(Arrays.toString(BuildingDraw[k]));//Test
+//		}//DEBUG ONLY TEST
 		return temp;
 	}
 	
@@ -239,7 +243,12 @@ public class BuildingInterface {
 	public void animate() {
 //		while (!allBuildings.get(CurrentBuildingIndex).CheckPersonReachedDestination()) {
 			allBuildings.get(CurrentBuildingIndex).movePersoninBuilding(this);
-			System.out.println(doDisplay());//DEBUG ONLY
+			doDisplay();
+			/////////////////////////////////////////////////////////////////////
+			//TODO object Interaction
+			
+			//////////////////////////////////////////////////
+			//System.out.println(doDisplay());//DEBUG ONLY
 //			try {
 //				TimeUnit.MILLISECONDS.sleep(250);
 //			} catch (InterruptedException e) {
@@ -316,7 +325,12 @@ public class BuildingInterface {
 			selectedFile = null; //##Bad error handling
 		}
 		try (PrintWriter out = new PrintWriter(selectedFile)) {//Writes to file
-				out.println(allBuildings.get(CurrentBuildingIndex).getOriginalInput());//Writes the Original Input from Building
+				String temp = "";
+				for (int i = 0; i < allBuildings.size(); i++) {
+					temp += allBuildings.get(i).getOriginalInput() + "\n";
+				}
+				temp = temp.substring(0, temp.length()-2);//Takes of last two characters because of extra \n
+				out.println(temp);//Writes the Original Input from Building
 				out.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();//Error Handling similar to RJM's
@@ -351,6 +365,12 @@ public class BuildingInterface {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace(); //Simple error handling similar to RJM's for the animate
 		}
+		/////////////////Make new building
+		StringSplitter S = new StringSplitter(temp, "\n");//Multi building save
+	    for(int i = 0; i < S.getStrings().length; i++) {
+	    	allBuildings.add(new Building(S.getStrings()[i]));// create building
+	    }
+		//////////////
 		return temp;
 	}
 	/**
@@ -394,20 +414,34 @@ public class BuildingInterface {
 	 */
 	public void  addRoom() {
 		String dim = "";
-		JTextField xField = new JTextField(5);
-		JTextField yField = new JTextField(5);
+		JTextField xField = new JTextField(3);
+		JTextField yField = new JTextField(3);
+		JTextField xxField = new JTextField(3);
+		JTextField yyField = new JTextField(3);
+		JTextField dxField = new JTextField(3);
+		JTextField dyField = new JTextField(3);
 		JPanel myPanel = new JPanel();
-		myPanel.add(new JLabel("x:"));
+		myPanel.add(new JLabel("x1:"));
 	    myPanel.add(xField);
 	    myPanel.add(Box.createHorizontalStrut(15)); // a spacer
-	    myPanel.add(new JLabel("y:"));
+	    myPanel.add(new JLabel("y1:"));
 	    myPanel.add(yField);
+	    myPanel.add(Box.createHorizontalStrut(5)); // a spacer
+	    myPanel.add(new JLabel("x2:"));
+	    myPanel.add(xxField);
+	    myPanel.add(Box.createHorizontalStrut(5)); // a spacer
+	    myPanel.add(new JLabel("y2:"));
+	    myPanel.add(yyField);
+	    myPanel.add(Box.createHorizontalStrut(5)); // a spacer
+	    myPanel.add(new JLabel("dx:"));
+	    myPanel.add(dxField);
+	    myPanel.add(Box.createHorizontalStrut(5)); // a spacer
+	    myPanel.add(new JLabel("dy:"));
+	    myPanel.add(dyField);
 		int valueIn = JOptionPane.showConfirmDialog(null, myPanel, "Enter Room opposing Corner Coordinates", JOptionPane.OK_CANCEL_OPTION);
 		if (valueIn == JOptionPane.OK_OPTION) {
 		    if (!(xField.getText() == "" || yField.getText() == "")) {//NOT
-		    	allBuildings.get(CurrentBuildingIndex).setBuildingx(Integer.parseInt(xField.getText()));
-		    	allBuildings.get(CurrentBuildingIndex).setBuildingy(Integer.parseInt(yField.getText()));
-		    	dim = xField.getText() + " " + yField.getText(); 
+		    	dim = xField.getText() + " " + yField.getText() + " " + xxField.getText() + " " + yyField.getText() + " " + dxField.getText() + " " + dyField.getText(); 
 		    	allBuildings.get(CurrentBuildingIndex).addRoom(dim);
 		    	showBuildingWall();
 		    }
@@ -511,6 +545,10 @@ public void moveObject() {
  */
 public void addPerson() {
 	allBuildings.get(CurrentBuildingIndex).addPerson();
+}
+
+public int getNumberofBuildings() {
+	return allBuildings.size();
 }
 
 //	/**

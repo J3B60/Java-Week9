@@ -24,7 +24,7 @@ public class Person {
 	 * @param y
 	 */
 	
-	Person(int x, int y){
+	Person(int x, int y){//Should not be used
 		PersonID++;
 		PersonPosition = new Point(x,y); //Initialise the Point Object
 		PointPath = new ArrayList<Point>();
@@ -39,7 +39,7 @@ public class Person {
 	 * @param random
 	 */
 	
-	Person(Point random) {
+	Person(Point random) {//Should not be used
 		PersonID++;
 		PersonPosition = random; //Assign Random Point position (from building class)
 		PointPath = new ArrayList<Point>();
@@ -129,8 +129,8 @@ public class Person {
 	public boolean movePerson(BuildingInterface bi) {//boolean if the path has ended
 		int dx = 0, dy = 0;
 		int movex = 0, movey =0;
-		if(index < PointPath.size()) {
-			if (PersonPosition != PointPath.get(index)) {
+		if(index < PointPath.size()) {//If more points to visit continue else finished
+			if (PersonPosition.getX() != PointPath.get(index).getX() && PersonPosition.getY() != PointPath.get(index).getY() ) {
 				dx = (int) PersonPosition.getX() - (int) PointPath.get(index).getX();
 				dy = (int) PersonPosition.getY() - (int) PointPath.get(index).getY();
 				//Checks if space is empty to move into however diagonals screw it up, checks are only 
@@ -163,7 +163,9 @@ public class Person {
 			return false;
 		}
 		else{
-			return true;
+			index = 0;//Drop back for memory saving - don't need to remember path
+			PointPath.clear();//Clear
+			return true;//All points finished - more to be added
 		}
 	}
 	

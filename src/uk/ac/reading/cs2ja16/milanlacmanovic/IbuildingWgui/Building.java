@@ -58,7 +58,10 @@ public class Building {
 		//aircon = new AirConditioner();//Temp
 		//motionsens = new MotionSensor();//TEMP
 		//occupant.PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
+		//////////////////////These two lines go in a pair
 		allPeople.add(new Person(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+		nextPathPoint(allPeople.size()-1);
+		////////////////////
 //USES POINT SET	//allPeople.get(0).PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
 		//nextPathPoint(); //Add the list of Point paths for person to follow next TOFIX
 		allBuildingObjects.add(new SmokeDetector());
@@ -90,7 +93,8 @@ public class Building {
 	 */
 	
 	public void setBuilding(String bS) {
-		StringSplitter S = new StringSplitter(bS, ";"); //Splits between sets of co-ordinates 
+		 //Splits between sets of co-ordinates
+		StringSplitter S = new StringSplitter(bS, ";");
 		StringSplitter SS = new StringSplitter(S.getStrings()[0], " "); //Splits first co-ordniates again using spaces
 		xSize = SS.getIntegers()[0]; //gets and assign the integer x building size
 		ySize = SS.getIntegers()[1]; //gets and assign the integer y building size
@@ -386,6 +390,7 @@ public class Building {
 	 */
 	public void addPerson() {
 		allPeople.add(new Person(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+		nextPathPoint(allPeople.size()-1);
 	}
 	
 	public void setObjectPos(int index, int x, int y){//Only move object if in the correct position

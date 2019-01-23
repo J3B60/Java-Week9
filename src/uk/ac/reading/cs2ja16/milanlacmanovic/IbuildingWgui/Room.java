@@ -179,6 +179,8 @@ public class Room{
 			temp = getDoorPoint();//ERROR, Better than nothing :( not good error handling but good enough
 			return temp;
 		}
+		//return temp;
+		//return new Point((int) temp.getY(), (int) temp.getX());//FLIPPED
 	}
 	/**
 	 * Same as getDoorInsidePoint but finds points points just outside the door
@@ -190,7 +192,7 @@ public class Room{
 		Point temp;
 		if (DoorRelativePositiontoRoom == 1) {
 			temp = new Point((int)getDoorPoint().getX()-1, (int)getDoorPoint().getY());
-			return temp;
+			return new Point((int) temp.getY(), (int) temp.getX());//FLIPPED
 		}
 		else if (DoorRelativePositiontoRoom == 2) {
 			temp = new Point((int)getDoorPoint().getX()+1, (int)getDoorPoint().getY());
@@ -208,6 +210,8 @@ public class Room{
 			temp = getDoorPoint();//ERROR, Better than nothing :( not good error handling but good enough
 			return temp;
 		}
+		//return temp;
+		//return new Point((int) temp.getY(), (int) temp.getX());//FLIPPED
 	}
 	public int[] getDoorCoords() {
 		return roomCoord;

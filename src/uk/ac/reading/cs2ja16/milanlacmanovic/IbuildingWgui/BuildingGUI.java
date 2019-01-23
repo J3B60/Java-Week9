@@ -5,7 +5,16 @@ import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
-
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -64,6 +73,7 @@ public class BuildingGUI extends Application {
      */
 	public void drawIt () {//Draw all required items to main Building GUI
 		gc.clearRect(0,  0,  canvasSize,  canvasSize);//Initialise
+		bi.doDisplay();
 		drawLines(gc);//Building & Room Lines
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().size(); i++) {//Draw all People
 			bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(i).showPersonGUI(this);
@@ -177,7 +187,8 @@ public class BuildingGUI extends Application {
 		});
 		mtoFit.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		    	BuildingtoFit();//In-case of future Zoom In, Out Function
+//		    	BuildingtoFit();//In-case of future Zoom In, Out Function
+		    	drawIt();
 		    }
 		});
 		mView.getItems().addAll(mBuilding, mGraph, mtoFit);
@@ -200,7 +211,7 @@ public class BuildingGUI extends Application {
 	/**
 	 * Display up to date, time and info on building in the right pane. NOTE displays only for current building
 	 */
-	public void drawStatus() {//TODO fix people
+	private void drawStatus() {//TODO fix people
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
@@ -210,7 +221,7 @@ public class BuildingGUI extends Application {
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {//Get all info for current building
 			temp += "\n" + bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).toString();
 		}
-		Label Rl = new Label(dateFormat.format(date) + "\n\n" + bi.toString() + "\n" + temp + "\n\n" + t);//Finish label
+		Label Rl = new Label(dateFormat.format(date) + "\n\n" + "Building No." + String.valueOf(bi.getCurrentBuildingIndex()+1) + " out of " + bi.getNumberofBuildings() + "\n\n" + bi.toString() + "\n" + temp );//Finish label
 		Rl.setWrapText(true);
 		rtPane.getChildren().add(Rl);				// add label to pane
 	}
@@ -218,7 +229,7 @@ public class BuildingGUI extends Application {
 	/**
 	 * Display Toolbar in leftpane
 	 */
-	public void drawToolbar(VBox pane) {//TODO fix people
+	private void drawToolbar(VBox pane) {//TODO fix people
 		pane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
@@ -287,8 +298,14 @@ public class BuildingGUI extends Application {
 	 */
 	private Button setAnimateButton() {
 			// create button
-		Button btnBottom = new Button("Animate");
+		Button btnBottom = new Button("ERROR");
 				// now add handler
+		if (SetAnimationRun == true) {
+			btnBottom = new Button("Pause");
+		}
+		else {
+			btnBottom = new Button("Animate");
+		}
 		btnBottom.setTooltip(new Tooltip("Run Building GUI"));
 		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -300,7 +317,7 @@ public class BuildingGUI extends Application {
 //    					drawIt();
 //    				}
 //				}
-				SetAnimationRun = true;
+				SetAnimationRun = !SetAnimationRun;
 					// and its action to draw earth at random angle
 			}
 		});
@@ -310,19 +327,19 @@ public class BuildingGUI extends Application {
 	 * Pauses Animation
 	 * @return
 	 */
-	private Button setPauseButton() {
-		// create button
-	Button btnBottom = new Button("Pause");
-			// now add handler
-	btnBottom.setTooltip(new Tooltip("Pause Animation"));
-	btnBottom.setOnAction(new EventHandler<ActionEvent>() {
-		@Override
-		public void handle(ActionEvent event) {
-			SetAnimationRun = false;
-		}
-	});
-	return btnBottom;
-}
+//	private Button setPauseButton() {
+//		// create button
+//	Button btnBottom = new Button("Pause");
+//			// now add handler
+//	btnBottom.setTooltip(new Tooltip("Pause Animation"));
+//	btnBottom.setOnAction(new EventHandler<ActionEvent>() {
+//		@Override
+//		public void handle(ActionEvent event) {
+//			SetAnimationRun = false;
+//		}
+//	});
+//	return btnBottom;
+//}
 	
 //	private Button setPauseButton() {
 //		// create button
@@ -614,7 +631,7 @@ public class BuildingGUI extends Application {
 	 }
 	private Button toolbarMoveObject() {
 		// create button
-		Image buttonIcon = new Image(getClass().getResourceAsStream("MoveIcon.png"));
+		Image buttonIcon = new Image(getClass().getResourceAsStream("moveIcon.png"));
 		Button btn = new Button();
 		ImageView imageView = new ImageView(buttonIcon);
 		imageView.setFitWidth(15);
@@ -655,7 +672,7 @@ public class BuildingGUI extends Application {
 	private void setBottomButtons(){
 		btPane.getChildren().clear();
 		btPane.getChildren().add(setAnimateButton());
-		btPane.getChildren().add(setPauseButton());
+//		btPane.getChildren().add(setPauseButton());
 		
 	}
 	/**
@@ -689,7 +706,7 @@ public class BuildingGUI extends Application {
 	    bp.setRight(rtPane);
 	    
 	    ltPane = new VBox();
-	    ltPane.setMaxWidth(95);
+	    ltPane.setMaxWidth(100);
 	    bp.setLeft(ltPane);
 	    drawToolbar(ltPane);
 	    
@@ -703,36 +720,56 @@ public class BuildingGUI extends Application {
 		// for animation, note start time
 //	    scene.setCursor(Cursor.WAIT); //CHANGE Cursor (could be used on canvas to resize building/edit)
 	    drawLines(gc); //Draw Lines Test
-	    new AnimationTimer()			// create timer
-	    	{
-	    		public void handle(long currentNanoTime) {
-	    				// define handle for what do at this time
-	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
-    				drawIt();
-    				drawStatus();
-	    			if (SetAnimationRun == true && t%0.250 == 0){
-//	    				drawSky();
-	    				bi.animate();
-//	    				System.out.println(doDisplay());
-//	    				try {
-//	    					TimeUnit.MILLISECONDS.sleep(250);
-//	    				} catch (InterruptedException e) {
-//	    					e.printStackTrace();
-//	    				}
-	    			}
-	    			else{
-	    				//######################
-	    			}
-	    		}
-	    	}.start();					// start it
+//	    new AnimationTimer()			// create timer
+//	    	{
+//	    		public void handle(long currentNanoTime) {
+//	    				// define handle for what do at this time
+//	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
+//    				drawIt();
+//    				drawStatus();
+//	    			if (SetAnimationRun == true){
+////	    				drawSky();
+//	    				bi.animate();
+////	    				System.out.println(doDisplay());
+////	    				try {
+////	    					TimeUnit.MILLISECONDS.sleep(250);
+////	    				} catch (InterruptedException e) {
+////	    					e.printStackTrace();
+////	    				}
+//	    			}
+//	    			else{
+//	    				//######################
+//	    			}
+//	    		}
+//	    	}.start();					// start it
 	    
 		stagePrimary.show();
+		Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.millis(250), new EventHandler<ActionEvent>() {
+
+		    @Override
+		    public void handle(ActionEvent event) {
+				drawIt();
+				drawStatus();
+    			if (SetAnimationRun == true){
+//    				drawSky();
+    				bi.animate();
+//    				System.out.println(doDisplay());
+//    				try {
+//    					TimeUnit.MILLISECONDS.sleep(250);
+//    				} catch (InterruptedException e) {
+//    					e.printStackTrace();
+//    				}
+    			}
+		    }
+		}));
+		fiveSecondsWonder.setCycleCount(Timeline.INDEFINITE);
+		fiveSecondsWonder.play();
 	}
 	/**
 	 * The ratio to keep things inside the canvas NOTE ignores line thickness
 	 * @return ratio
 	 */
-	private double BuildingtoFit() {//NEED TO DRAW BUILDING FIRST
+	public double BuildingtoFit() {//NEED TO DRAW BUILDING FIRST
 		double ratio = 0;
 		ratio = bi.getBuildingDraw().length;
 		if (ratio < bi.getBuildingDraw()[0].length) ratio = bi.getBuildingDraw()[0].length;
@@ -867,9 +904,9 @@ public class BuildingGUI extends Application {
 	 * Getter for Building Ratio## unnecessary?!?!
 	 * @return Building toFit Ratio
 	 */
-	public double getRatio() {
-		return BuildingtoFit();
-	}
+//	public double getRatio() {
+//		return BuildingtoFit();
+//	}
 	/**
 	 * GUI MAIN
 	 * @param args
