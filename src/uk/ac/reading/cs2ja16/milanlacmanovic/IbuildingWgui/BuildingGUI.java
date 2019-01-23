@@ -66,7 +66,7 @@ public class BuildingGUI extends Application {
     private boolean SetAnimationRun = false;//Animation Switch
     private Random rgen = new Random();
     BuildingInterface bi = new BuildingInterface();//Building Interface
-    private int skyPos = -360;
+    private double skyPos = -360;
     private Boolean gridViewSwitch = false;//Grid view switch for main Building GUI
     private Boolean setPersonPosSwitch = false;//Mouse click the position of Person
     private Boolean setObjectPosSwitch = false;//Mouse click the postion of Object
@@ -297,12 +297,12 @@ public class BuildingGUI extends Application {
 		Image skyImg = new Image(getClass().getResourceAsStream("DaySkyTransition.png"));
 		secondaryGC.setFill(Color.RED);
 		secondaryGC.fillPolygon(new double[]{20, 20, 30},
-              new double[]{(canvasSize/2) - 5, (canvasSize/2) + 5, canvasSize/2}, 3);
+              new double[]{(canvasSize/2) - 5, (canvasSize/2) + 5, canvasSize/2}, 3);//Triangle Arror
 		if (skyPos == -1440) {
 			skyPos = -360;
 		}
-		skyPos =- 3*((int) t/120);
-		secondaryGC.drawImage(skyImg, 30, skyPos);
+		skyPos -= 3*(1/120);//Static (t was changed to 5) so that it doesn't rely on t
+		secondaryGC.drawImage(skyImg, 30, (int) skyPos);
 		ltPane.getChildren().add(Ll);
 		ltPane.getChildren().add(sky);				// add label to pane
 	}
@@ -748,7 +748,7 @@ public class BuildingGUI extends Application {
 	    bp.setRight(rtPane);
 	    
 	    ltPane = new VBox();
-	    ltPane.setMaxWidth(100);
+	    ltPane.setMaxWidth(90);
 	    bp.setLeft(ltPane);
 //	    drawToolbar(ltPane);
 	    
@@ -772,7 +772,6 @@ public class BuildingGUI extends Application {
 	    		public void handle(long currentNanoTime) {
 //	    				// define handle for what do at this time
 	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
-    				drawSky();
 	    			drawIt();
 //    				drawStatus();
 //	    			if (SetAnimationRun == true){
@@ -796,8 +795,9 @@ public class BuildingGUI extends Application {
 
 		    @Override
 		    public void handle(ActionEvent event) {
-				drawIt();
+				//drawIt();
 				drawStatus();
+				drawSky();
     			if (SetAnimationRun == true){
 //    				drawSky();
     				bi.animate();
