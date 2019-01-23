@@ -40,20 +40,24 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class BuildingGUI extends Application {
 	int canvasSize = 512;				// constants for relevant sizes
 	double t;//time
     GraphicsContext gc;//Main GUI of Building
-    GraphicsContext secondaryGC;//For DaySkyCycle
+    //GraphicsContext secondaryGC;//For DaySkyCycle
+    GraphicsContext sGC;
     private VBox ltPane;
     private VBox rtPane;//to hold the Building Status
     private FlowPane toolbar;//Toolbar consisting of editing options for Building
@@ -65,6 +69,7 @@ public class BuildingGUI extends Application {
     private Boolean gridViewSwitch = false;//Grid view switch for main Building GUI
     private Boolean setPersonPosSwitch = false;//Mouse click the position of Person
     private Boolean setObjectPosSwitch = false;//Mouse click the postion of Object
+    ArrayList<Point> graphxy = new ArrayList<Point>();
     
 
     long startNanoTime = System.nanoTime();//SYSTEM TIME
@@ -224,8 +229,34 @@ public class BuildingGUI extends Application {
 		Label Rl = new Label(dateFormat.format(date) + "\n\n" + "Building No." + String.valueOf(bi.getCurrentBuildingIndex()+1) + " out of " + bi.getNumberofBuildings() + "\n\n" + bi.toString() + "\n" + temp );//Finish label
 		Rl.setWrapText(true);
 		rtPane.getChildren().add(Rl);				// add label to pane
+		rtPane.getChildren().add(TemperatureGraph());
 	}
 	
+	private Canvas TemperatureGraph() {
+		Canvas sC = new Canvas(110,70);
+		sGC = sC.getGraphicsContext2D();
+		double maxX=100;
+		double maxY=60;
+		double minX=0;
+		double minY=15;
+		sGC.setFont(Font.font(16));
+		sGC.setFill(Color.RED);
+		sGC.setLineWidth(1);
+		sGC.strokeLine(2, 2, maxX, 2);//Vertical Axis
+		sGC.strokeLine(2,2,2,maxY);//Horizontal Axis
+		graphxy.add(new Point((int) t%90, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp()));
+		if (graphxy.size() == 89) {
+			Point tempprevious = graphxy.get(graphxy.size()-1);
+			graphxy.clear();
+			graphxy.add(tempprevious);
+		}
+		for (int i = 0; i < graphxy.size(); i++) {
+			sGC.strokeLine(graphxy.get(i-2).getX(), graphxy.get(i-2).getY(), graphxy.get(i-1).getX(), graphxy.get(i-1).getY());
+		}
+		gc.fillText("Temperature, x:Time, y:Temp", maxX/2, maxY -5);
+		return sC;
+	}
+
 	/**
 	 * Display Toolbar in leftpane
 	 */
@@ -680,6 +711,7 @@ public class BuildingGUI extends Application {
 	 */
 	@Override
 	public void start(Stage stagePrimary) throws Exception {
+		graphxy.add(new Point(0,0));
 		StackPane holder = new StackPane();
 		stagePrimary.setTitle("Intelligent Building");
 		BorderPane bp = new BorderPane();
@@ -720,11 +752,11 @@ public class BuildingGUI extends Application {
 		// for animation, note start time
 //	    scene.setCursor(Cursor.WAIT); //CHANGE Cursor (could be used on canvas to resize building/edit)
 	    drawLines(gc); //Draw Lines Test
-//	    new AnimationTimer()			// create timer
-//	    	{
-//	    		public void handle(long currentNanoTime) {
+	    new AnimationTimer()			// create timer
+	    	{
+	    		public void handle(long currentNanoTime) {
 //	    				// define handle for what do at this time
-//	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
+	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
 //    				drawIt();
 //    				drawStatus();
 //	    			if (SetAnimationRun == true){
@@ -740,8 +772,8 @@ public class BuildingGUI extends Application {
 //	    			else{
 //	    				//######################
 //	    			}
-//	    		}
-//	    	}.start();					// start it
+	    		}
+	    	}.start();					// start it
 	    
 		stagePrimary.show();
 		Timeline fiveSecondsWonder = new Timeline(new KeyFrame(Duration.millis(250), new EventHandler<ActionEvent>() {

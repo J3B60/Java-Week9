@@ -29,6 +29,7 @@ public class BuildingInterface {
 	//Building myBuilding;//Building
 	ArrayList<Building> allBuildings;
 	int CurrentBuildingIndex = 0;
+	
 	/**
 	 * return as String definition of bOpt'th building
 	 * @param bOpt
@@ -244,10 +245,7 @@ public class BuildingInterface {
 //		while (!allBuildings.get(CurrentBuildingIndex).CheckPersonReachedDestination()) {
 			allBuildings.get(CurrentBuildingIndex).movePersoninBuilding(this);
 			doDisplay();
-			/////////////////////////////////////////////////////////////////////
-			//TODO object Interaction
 			
-			//////////////////////////////////////////////////
 			//System.out.println(doDisplay());//DEBUG ONLY
 //			try {
 //				TimeUnit.MILLISECONDS.sleep(250);

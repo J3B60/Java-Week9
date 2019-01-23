@@ -67,4 +67,10 @@ public class LightBulb extends BuildingObject {
 	public void Activate(){
 		//drawLight();
 	}
+
+	@Override
+	public void check(Building b) {
+		// TODO Auto-generated method stub
+		
+	}
 }

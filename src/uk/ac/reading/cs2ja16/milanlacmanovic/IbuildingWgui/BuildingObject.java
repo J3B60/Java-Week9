@@ -91,4 +91,6 @@ public abstract class BuildingObject {
 	abstract public int objectInRoom(Building myBuilding);
 	
 	abstract public void Activate();
+	
+	abstract public void check(Building b);
 }

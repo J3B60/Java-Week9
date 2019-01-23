@@ -67,4 +67,10 @@ public class Window extends BuildingObject {
 		
 	}
 
+	@Override
+	public void check(Building b) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

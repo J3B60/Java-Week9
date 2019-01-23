@@ -182,6 +182,9 @@ public class Building {
 	public void movePersoninBuilding(BuildingInterface bi) {//Moves All people
 		for (int i = 0; i < allPeople.size(); i++){
 			if (allPeople.get(i).movePerson(bi)) nextPathPoint(i);//tell Person class to move and the person can know how to move because it has BuildngDraw
+			for (int j = 0; j < allBuildingObjects.size(); j++) {
+				allBuildingObjects.get(j).check(this);
+			}
 		}
 	}
 	
@@ -403,6 +406,14 @@ public class Building {
 				break;
 			}
 		}
+	}
+	public void changeTemp(double source) {
+		temperature = (source + 9.0 * temperature) / 10.0;
+	}
+	
+	public double getTemp() {
+		temperature -= 0.01;//With added Heat loss every time the temp is checked
+		return temperature;
 	}
 	/**
 	 * Building test main

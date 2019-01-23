@@ -5,7 +5,7 @@ import java.awt.Point;
 import javafx.scene.image.Image;
 
 public class Heater extends BuildingObject {
-
+	private double sourceTemp = 25; 
 	Heater(){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("Radiator.jpg"));
@@ -63,6 +63,13 @@ public class Heater extends BuildingObject {
 	public void Activate() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void check(Building b) {//Replace Activate too
+		if (b.getTemp() < 23) {
+			b.changeTemp(sourceTemp);
+		}
 	}
 
 }

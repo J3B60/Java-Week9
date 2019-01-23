@@ -66,5 +66,11 @@ public class SmokeDetector extends BuildingObject {
 	public void Activate(){
 		
 	}
+
+	@Override
+	public void check(Building b) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

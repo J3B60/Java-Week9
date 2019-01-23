@@ -78,5 +78,11 @@ public class MotionSensor extends BuildingObject{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void check(Building b) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -5,7 +5,7 @@ import java.awt.Point;
 import javafx.scene.image.Image;
 
 public class AirConditioner extends BuildingObject{
-	
+	private double sourceTemp = 20;
 	AirConditioner(){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("air-conditioned.png"));
@@ -60,8 +60,13 @@ public class AirConditioner extends BuildingObject{
 	}
 
 	@Override
-	public void Activate() {
-		// TODO Auto-generated method stub
-		
+	public void Activate() {	
+	}
+
+	@Override
+	public void check(Building b) {//Replace Activate too
+		if (b.getTemp() > 29) {
+			b.changeTemp(sourceTemp);
+		}
 	}
 }
