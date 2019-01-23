@@ -56,16 +56,17 @@ public class BuildingGUI extends Application {
 	int canvasSize = 512;				// constants for relevant sizes
 	double t;//time
     GraphicsContext gc;//Main GUI of Building
-    //GraphicsContext secondaryGC;//For DaySkyCycle
+    GraphicsContext secondaryGC;//For DaySkyCycle
     GraphicsContext sGC;
     private VBox ltPane;
     private VBox rtPane;//to hold the Building Status
+    private VBox ttPane;//TOPPANE Test Idea
     private FlowPane toolbar;//Toolbar consisting of editing options for Building
     private HBox btPane;//Start,Pause
     private boolean SetAnimationRun = false;//Animation Switch
     private Random rgen = new Random();
     BuildingInterface bi = new BuildingInterface();//Building Interface
-    //private int skyPos = -360;
+    private int skyPos = -360;
     private Boolean gridViewSwitch = false;//Grid view switch for main Building GUI
     private Boolean setPersonPosSwitch = false;//Mouse click the position of Person
     private Boolean setObjectPosSwitch = false;//Mouse click the postion of Object
@@ -220,13 +221,13 @@ public class BuildingGUI extends Application {
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/mm/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
 		Date date = new Date();
 		String temp = "";
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {//Get all info for current building
 			temp += "\n" + bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).toString();
 		}
-		Label Rl = new Label(dateFormat.format(date) + "\n\n" + "Building No." + String.valueOf(bi.getCurrentBuildingIndex()+1) + " out of " + bi.getNumberofBuildings() + "\n\n" + bi.toString() + "\n" + temp + "\n" + t + "\n\n");//Finish label
+		Label Rl = new Label(dateFormat.format(date) + "\n\n" + "Building No." + String.valueOf(bi.getCurrentBuildingIndex()+1) + " out of " + bi.getNumberofBuildings() + "\n\n" + bi.toString() + "\n" + temp + "\n\n");//Finish label
 		Rl.setWrapText(true);
 		rtPane.getChildren().add(Rl);				// add label to pane
 		rtPane.getChildren().add(TemperatureGraph());
@@ -272,39 +273,39 @@ public class BuildingGUI extends Application {
 	/**
 	 * Display Toolbar in leftpane
 	 */
-	private void drawToolbar(VBox pane) {//TODO fix people
-		pane.getChildren().clear();					// clear rtpane
+//	private void drawToolbar() {//TODO fix people
+////		pane.getChildren().clear();					// clear rtpane
+////				// now create label
+////		//Need to loop for all items in solar system and add to temp 
+////		
+////		Label Ll = new Label("\n\nToolbar");//Finish label
+////		Ll.setWrapText(true);
+////		pane.getChildren().add(Ll);				// add label to pane
+//		toolbarCollection();//Toolbar for editing building
+//	}
+	
+	public void drawSky() {
+		ltPane.getChildren().clear();					// clear rtpane
+		
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		
-		Label Ll = new Label("\n\nToolbar");//Finish label
-		Ll.setWrapText(true);
-		pane.getChildren().add(Ll);				// add label to pane
-		toolbarCollection(pane);//Toolbar for editing building
+		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+		Date date = new Date();
+		Label Ll = new Label(dateFormat.format(date));
+		Canvas sky = new Canvas(50, canvasSize);
+		secondaryGC = sky.getGraphicsContext2D();
+		Image skyImg = new Image(getClass().getResourceAsStream("DaySkyTransition.png"));
+		secondaryGC.setFill(Color.RED);
+		secondaryGC.fillPolygon(new double[]{20, 20, 30},
+              new double[]{(canvasSize/2) - 5, (canvasSize/2) + 5, canvasSize/2}, 3);
+		if (skyPos == -1440) {
+			skyPos = -360;
+		}
+		skyPos =- 3*((int) t/120);
+		secondaryGC.drawImage(skyImg, 30, skyPos);
+		ltPane.getChildren().add(Ll);
+		ltPane.getChildren().add(sky);				// add label to pane
 	}
-	
-//	public void drawSky() {
-//		ltPane.getChildren().clear();					// clear rtpane
-//		
-//				// now create label
-//		//Need to loop for all items in solar system and add to temp 
-//		DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
-//		Date date = new Date();
-//		Label Ll = new Label(dateFormat.format(date));
-//		Canvas sky = new Canvas(50, canvasSize);
-//		secondaryGC = sky.getGraphicsContext2D();
-//		Image skyImg = new Image(getClass().getResourceAsStream("DaySkyTransition.png"));
-//		secondaryGC.setFill(Color.RED);
-//		secondaryGC.fillPolygon(new double[]{20, 20, 30},
-//              new double[]{(canvasSize/2) - 5, (canvasSize/2) + 5, canvasSize/2}, 3);
-//		if (skyPos == -1440) {
-//			skyPos = -360;
-//		}
-//		skyPos =- 3*((int) t/120);
-//		secondaryGC.drawImage(skyImg, 30, skyPos);
-//		ltPane.getChildren().add(Ll);
-//		ltPane.getChildren().add(sky);				// add label to pane
-//	}
 	
 	private void ItemPosSet(double x, double y) {
 		// now clear canvas and draw sun and moon
@@ -693,7 +694,7 @@ public class BuildingGUI extends Application {
 	/**
 	 * Collects all the toolbar options and puts them into a flow pane then into a pane
 	 */
-	private void toolbarCollection(VBox pane) {
+	private FlowPane toolbarCollection() {
 		toolbar = new FlowPane();
 		toolbar.getChildren().add(toolbarGridView());
 		toolbar.getChildren().add(toolbarMoveUpFloor());
@@ -707,7 +708,7 @@ public class BuildingGUI extends Application {
 		toolbar.getChildren().add(toolbarAddObject());
 		toolbar.getChildren().add(toolbarDelObject());
 		toolbar.getChildren().add(toolbarMoveObject());
-		pane.getChildren().add(toolbar);
+		return toolbar;
 	}
 	/**
 	 * sets up the bottom buttons for animation
@@ -727,9 +728,6 @@ public class BuildingGUI extends Application {
 		StackPane holder = new StackPane();
 		stagePrimary.setTitle("Intelligent Building");
 		BorderPane bp = new BorderPane();
-		
-		bp.setTop(setMenu());
-		
 		
 	    Group root = new Group();					// for group of what is shown			// put it in a scene				// apply the scene to the stage
 	    Canvas canvas = new Canvas( canvasSize, canvasSize );
@@ -752,7 +750,12 @@ public class BuildingGUI extends Application {
 	    ltPane = new VBox();
 	    ltPane.setMaxWidth(100);
 	    bp.setLeft(ltPane);
-	    drawToolbar(ltPane);
+//	    drawToolbar(ltPane);
+	    
+	    ttPane = new VBox();
+	    ttPane.getChildren().add(setMenu());
+	    ttPane.getChildren().add(toolbarCollection());
+	    bp.setTop(ttPane);
 	    
 	    btPane = new HBox();
 	    bp.setBottom(btPane);
@@ -769,7 +772,8 @@ public class BuildingGUI extends Application {
 	    		public void handle(long currentNanoTime) {
 //	    				// define handle for what do at this time
 	    			t = (currentNanoTime - startNanoTime) / 1000000000.0;
-//    				drawIt();
+    				drawSky();
+	    			drawIt();
 //    				drawStatus();
 //	    			if (SetAnimationRun == true){
 ////	    				drawSky();
