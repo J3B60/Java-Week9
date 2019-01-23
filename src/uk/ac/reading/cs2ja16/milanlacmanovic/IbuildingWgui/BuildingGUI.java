@@ -226,34 +226,46 @@ public class BuildingGUI extends Application {
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {//Get all info for current building
 			temp += "\n" + bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).toString();
 		}
-		Label Rl = new Label(dateFormat.format(date) + "\n\n" + "Building No." + String.valueOf(bi.getCurrentBuildingIndex()+1) + " out of " + bi.getNumberofBuildings() + "\n\n" + bi.toString() + "\n" + temp );//Finish label
+		Label Rl = new Label(dateFormat.format(date) + "\n\n" + "Building No." + String.valueOf(bi.getCurrentBuildingIndex()+1) + " out of " + bi.getNumberofBuildings() + "\n\n" + bi.toString() + "\n" + temp + "\n" + t + "\n\n");//Finish label
 		Rl.setWrapText(true);
 		rtPane.getChildren().add(Rl);				// add label to pane
 		rtPane.getChildren().add(TemperatureGraph());
 	}
 	
 	private Canvas TemperatureGraph() {
-		Canvas sC = new Canvas(110,70);
+		/////////Canvas Area
+		double canvasX = 200;
+		double canvasY = 150;
+		Canvas sC = new Canvas(canvasX,canvasY);
 		sGC = sC.getGraphicsContext2D();
-		double maxX=100;
-		double maxY=60;
-		double minX=0;
-		double minY=15;
-		sGC.setFont(Font.font(16));
-		sGC.setFill(Color.RED);
+		/////////Graphing Area Position
+		double maxX=175;
+		double maxY=125;
+		double minX=25;
+		double minY=25;
+		////////////Y axis Scaling
+		int ratio = 3;//Decent size based off the range we should get during normal use of app
+		sGC.setFont(Font.font(8));
+		sGC.setFill(Color.BLACK);
 		sGC.setLineWidth(1);
-		sGC.strokeLine(2, 2, maxX, 2);//Vertical Axis
-		sGC.strokeLine(2,2,2,maxY);//Horizontal Axis
-		graphxy.add(new Point((int) t%90, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp()));
-		if (graphxy.size() == 89) {
-			Point tempprevious = graphxy.get(graphxy.size()-1);
+		sGC.setStroke(Color.BLACK);
+		sGC.strokeLine(minX, maxY, maxX, maxY);//Vertical Axis
+		sGC.strokeLine(minX,minY,minX,maxY);//Horizontal Axis
+		sGC.setStroke(Color.RED);
+		graphxy.add(new Point((int) t%124, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp()));//Mess around with time to get the right combination
+		if (graphxy.size() == 499) {
+			Point tempprevious = new Point((int)minX, (int)graphxy.get(graphxy.size()-1).getY());
 			graphxy.clear();
 			graphxy.add(tempprevious);
 		}
-		for (int i = 0; i < graphxy.size(); i++) {
-			sGC.strokeLine(graphxy.get(i-2).getX(), graphxy.get(i-2).getY(), graphxy.get(i-1).getX(), graphxy.get(i-1).getY());
+		for (int i = 1; i < graphxy.size(); i++) {
+			sGC.strokeLine((graphxy.get(i-1).getX()+minX), maxY - (graphxy.get(i-1).getY()*ratio), (graphxy.get(i).getX()+minX), maxY - (graphxy.get(i).getY())*ratio);
 		}
-		gc.fillText("Temperature, x:Time, y:Temp", maxX/2, maxY -5);
+		sGC.fillText("y:Temp", 0, 20);//Y axis Label
+		sGC.fillText("Temperature", 80, 10);//Title
+		sGC.fillText("x:Time", canvasX/2,  (canvasY -maxY)/2 + maxY);//X axis Label
+		sGC.setFont(Font.font(14));
+		sGC.fillText(String.valueOf((int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp())+ "\u00b0C", canvasX-40,  (canvasY -maxY)/2 + minY/2);
 		return sC;
 	}
 
@@ -711,7 +723,7 @@ public class BuildingGUI extends Application {
 	 */
 	@Override
 	public void start(Stage stagePrimary) throws Exception {
-		graphxy.add(new Point(0,0));
+		graphxy.add(new Point((int) t%90, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp()));
 		StackPane holder = new StackPane();
 		stagePrimary.setTitle("Intelligent Building");
 		BorderPane bp = new BorderPane();
