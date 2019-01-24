@@ -169,7 +169,7 @@ public class Building {
 	
 	public void showBuilding (BuildingInterface bi) {
 		for (Room r: allRooms) r.showRoom(bi);
-		//allPeople.get(0).showPerson(bi);
+		//allPeople.get(0).showPerson(bi);//MAY CAUSE MAJOR ERRORS - disabling this will prevent drawing P in BuildingDraw[][]
 		//for (BuildingObject bo : allBuildingObjects) bo.presentGUI();
 	}
 	

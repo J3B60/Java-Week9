@@ -88,7 +88,8 @@ public class MotionSensor extends BuildingObject{
 
 	@Override
 	public void check(BuildingInterface bi) {
-		// TODO Auto-generated method stub
+		for (int index = 0; index < bi.allBuildings.get(bi.getCurrentBuildingIndex()); index++
+		bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(index)
 		
 	}
 	

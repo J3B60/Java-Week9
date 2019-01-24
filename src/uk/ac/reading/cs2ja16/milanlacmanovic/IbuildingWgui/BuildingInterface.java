@@ -553,6 +553,10 @@ public int getNumberofBuildings() {
 	return allBuildings.size();
 }
 
+public int[] changeRoomColour(int x, int y, int w, int h) {
+	return new int[] {x,y,w,h};
+}
+
 //	/**
 //	 * Main for the whole program, starts Building Interface constructor
 //	 * @param args

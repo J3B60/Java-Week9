@@ -66,9 +66,9 @@ public class LightBulb extends BuildingObject {
 		}
 		return -1; //If not found then return -1
 	}
-	private void drawLight(BuildingGUI bg, Building myBuilding) {
-		bg.gc.setFill(Color.YELLOW);
-		bg.gc.fillRect(myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[0], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[1], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[2], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[3]);
+	private void drawLight(BuildingInterface bi) {
+		bi.changeRoomColour(bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[0], bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[1], bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[2], bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[3]);
+		//bg.gc.fillRect(myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[0], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[1], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[2], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[3]);
 		//NEED TO ADD slightly off centre because of line thickness, NEED RATIO bg.getRatio()
 	}
 	public void Activate(){
@@ -77,7 +77,9 @@ public class LightBulb extends BuildingObject {
 
 	@Override
 	public void check(BuildingInterface bi) {
-		// TODO Auto-generated method stub
+		if (true/*####*/) {
+			drawLight(bi);
+		}
 		
 	}
 }

@@ -993,6 +993,12 @@ public class BuildingGUI extends Application {
 		return canvasSize;
 	}
 	
+	public void changeRoomColour(int[] x){
+		double ratio = BuildingtoFit();
+		gc.setFill(Color.YELLOW);
+		gc.fillRect(x[0]*ratio, x[1]*ratio, x[2]*ratio, x[3]*ratio);
+	}
+	
 	/**
 	 * Getter for Building Ratio## unnecessary?!?!
 	 * @return Building toFit Ratio
