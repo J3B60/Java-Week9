@@ -1,16 +1,25 @@
 package uk.ac.reading.cs2ja16.milanlacmanovic.IbuildingWgui;
 
 import java.awt.Point;
+import java.util.Random;
 
 import javafx.scene.image.Image;
 
 public class Lift extends BuildingObject {
-
-	Lift(){
+	Random rgen = new Random();
+//	Lift(){
+//		objectID++;//ToTest
+//		objectImage = new Image(getClass().getResourceAsStream("Elevator.png"));
+//		objectName = "Lift - " + String.valueOf(objectID);
+//		objectPosition = new Point(7,1);//CURRENT DEFAULT FOR NOWb
+//		
+//	}
+	
+	Lift(Point Random){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("Elevator.png"));
 		objectName = "Lift - " + String.valueOf(objectID);
-		objectPosition = new Point(7,1);//CURRENT DEFAULT FOR NOWb
+		objectPosition = Random;//CURRENT DEFAULT FOR NOWb
 		
 	}
 
@@ -70,8 +79,63 @@ public class Lift extends BuildingObject {
 	}
 
 	@Override
-	public void check(Building b) {
-		// TODO Auto-generated method stub
-		
+	public void check(BuildingInterface bi) {
+		int PersonNumber = -1;
+		int ULiftindex = -1;
+		int DLiftindex = -1;
+		if (bi.allBuildings.size()>1) {
+			for(int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().size(); i++) {
+				if (bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(i).getPersonPositionX() == getXPosition() && bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(i).getPersonPositionY() == getYPosition()) {//Person positions to be at Lift and that there is a floor above or below
+					PersonNumber = i;
+					break;
+				}
+			}
+			if(PersonNumber != -1) {
+				if(bi.getCurrentBuildingIndex()-1 >= 0) {//check if there is floor below
+					for(int j = 0; j < bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).getAllBuildingObjects().size(); j++) {
+						if(bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).getAllBuildingObjects().get(j).getClass().equals(this.getClass())){
+							DLiftindex = j;
+							break;
+						}
+					}
+				}
+				//else {}DLiftIndex= -1
+				if(bi.getCurrentBuildingIndex()+1 < bi.allBuildings.size()) {//check if there is floor above
+					for(int k = 0; k < bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).getAllBuildingObjects().size(); k++) {
+						if(bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).getAllBuildingObjects().get(k).getClass().equals(this.getClass())){
+							ULiftindex = k;
+							break;
+						}
+					}
+				}
+				//else{} ULiftindex = -1
+				if(ULiftindex != -1 && DLiftindex != -1) {//Both true and found
+					switch(rgen.nextInt(2)) {
+					case 0://FloorBelow
+						bi.allBuildings.get(bi.getCurrentBuildingIndex()).deletePerson(PersonNumber);
+						//bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).addPersonInPos(bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).getAllBuildingObjects().get(DLiftindex).getXPosition(), bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).getAllBuildingObjects().get(DLiftindex).getYPosition());
+						bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).addPerson();//Changed to random position since the person could get stuck going back an forth in the elevators
+						break;
+					case 1://FloorAbove
+						bi.allBuildings.get(bi.getCurrentBuildingIndex()).deletePerson(PersonNumber);
+						//bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).addPersonInPos(bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).getAllBuildingObjects().get(ULiftindex).getXPosition(), bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).getAllBuildingObjects().get(ULiftindex).getYPosition());
+						bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).addPerson();
+						break;
+					default:
+						break;
+					}
+				}
+				else if(ULiftindex != -1 && DLiftindex == -1) {//Above Floor with Lift
+					bi.allBuildings.get(bi.getCurrentBuildingIndex()).deletePerson(PersonNumber);//+1 because of -1 offset in deletePerson function
+					//bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).addPersonInPos(bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).getAllBuildingObjects().get(ULiftindex).getXPosition(), bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).getAllBuildingObjects().get(ULiftindex).getYPosition());
+					bi.allBuildings.get(bi.getCurrentBuildingIndex()+1).addPerson();
+				}
+				else if(ULiftindex == -1 && DLiftindex != -1) {//Below Floor with Lift
+					bi.allBuildings.get(bi.getCurrentBuildingIndex()).deletePerson(PersonNumber);//+1 because of -1 offset in deletePerson function
+					//bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).addPersonInPos(bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).getAllBuildingObjects().get(DLiftindex).getXPosition(), bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).getAllBuildingObjects().get(DLiftindex).getYPosition());
+					bi.allBuildings.get(bi.getCurrentBuildingIndex()-1).addPerson();
+				}
+			}
+		}
 	}
 }

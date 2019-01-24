@@ -64,11 +64,11 @@ public class Building {
 		////////////////////
 //USES POINT SET	//allPeople.get(0).PointSet(allRooms.get(PersonInRoom()-1).getDoorInsidePoint(allRooms.get(PersonInRoom()-1).getDoorPositionRelativetoRoom())); //Set the Persons first point
 		//nextPathPoint(); //Add the list of Point paths for person to follow next TOFIX
-		allBuildingObjects.add(new SmokeDetector());
-		allBuildingObjects.add(new LightBulb());
-		allBuildingObjects.add(new Lift());
-		allBuildingObjects.add(new AirConditioner());
-		allBuildingObjects.add(new MotionSensor());
+		allBuildingObjects.add(new Heater(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+		allBuildingObjects.add(new LightBulb(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+		allBuildingObjects.add(new Lift(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+		allBuildingObjects.add(new AirConditioner(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+		allBuildingObjects.add(new MotionSensor(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 	}
 	
 	/**
@@ -147,9 +147,9 @@ public class Building {
 		temp += "Building size " + xSize + "," + ySize + "\n";
 		//temp += "Room from " + allRooms.toString();//Test
 		for (Room r: allRooms) temp = temp + "Room from " + r.toStringRoomX() + " to " + r.toStringRoomY() + " door at " + r.toStringRoomDoor() + "\n";
-		temp += "Occupant is in Room: ";
+//		temp += "Occupant is in Room: ";
 		for (int i = 0; i<allPeople.size(); i++) {//Get info for each person
-			temp += PersonInRoom(i) + "\n";
+			temp += "PersonID: " + String.valueOf(i+1) + " in Room " +   PersonInRoom(i) + "\n";
 		}
 		return temp;
 	}
@@ -169,7 +169,7 @@ public class Building {
 	
 	public void showBuilding (BuildingInterface bi) {
 		for (Room r: allRooms) r.showRoom(bi);
-		allPeople.get(0).showPerson(bi);
+		//allPeople.get(0).showPerson(bi);
 		//for (BuildingObject bo : allBuildingObjects) bo.presentGUI();
 	}
 	
@@ -182,8 +182,8 @@ public class Building {
 	public void movePersoninBuilding(BuildingInterface bi) {//Moves All people
 		for (int i = 0; i < allPeople.size(); i++){
 			if (allPeople.get(i).movePerson(bi)) nextPathPoint(i);//tell Person class to move and the person can know how to move because it has BuildngDraw
-			for (int j = 0; j < allBuildingObjects.size(); j++) {
-				allBuildingObjects.get(j).check(this);
+			for (int j = 0; j < allBuildingObjects.size(); j++) {//Check all items to activate
+				allBuildingObjects.get(j).check(bi);
 			}
 		}
 	}
@@ -325,7 +325,7 @@ public class Building {
 	 * @param i
 	 */
 	public void deletePerson(int i) {
-		if (i+1 <= allPeople.size() && i>0) {
+		if (i < allPeople.size() && i >= 0) {
 			allPeople.remove(i);
 		}
 		else {
@@ -363,25 +363,25 @@ public class Building {
 	public void addObject(String s) {//TODO change to not be in default POS allBO.get(last) {which is the new object} then .setXPos(), .setYPos() <- come from JOption Input, if ok set, if cancelled JOption then in default position {default position will cause problems}
 		switch (s) {//Could set default Pos to random like Person Random Pos
 		case "Air Conditioner":
-			allBuildingObjects.add(new AirConditioner());
+			allBuildingObjects.add(new AirConditioner(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 			break;
 		case "Heater":
-			allBuildingObjects.add(new Heater());
+			allBuildingObjects.add(new Heater(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 			break;
 		case "Lift":
-			allBuildingObjects.add(new Lift());
+			allBuildingObjects.add(new Lift(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 			break;
 		case "Light Bulb":
-			allBuildingObjects.add(new LightBulb());
+			allBuildingObjects.add(new LightBulb(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 			break;
 		case "Motion Sensor":
-			allBuildingObjects.add(new MotionSensor());
+			allBuildingObjects.add(new MotionSensor(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 			break;
 		case "Smoke Detector":
-			allBuildingObjects.add(new SmokeDetector());
+			allBuildingObjects.add(new SmokeDetector(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 			break;
 		case "Window":
-			allBuildingObjects.add(new Window());
+			allBuildingObjects.add(new Window(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
 			break;
 		default:
 			JOptionPane.showMessageDialog(null, "Bad Object, Should not happen, nothing added", "Error",  JOptionPane.ERROR_MESSAGE);
@@ -393,6 +393,11 @@ public class Building {
 	 */
 	public void addPerson() {
 		allPeople.add(new Person(allRooms.get(RoomRandomSelect()).getRandom(randGen)));
+		nextPathPoint(allPeople.size()-1);
+	}
+	
+	public void addPersonInPos(int x, int y) {
+		allPeople.add(new Person(x,y));
 		nextPathPoint(allPeople.size()-1);
 	}
 	
@@ -411,8 +416,21 @@ public class Building {
 		temperature = (source + 9.0 * temperature) / 10.0;
 	}
 	
-	public double getTemp() {
-		temperature -= 0.01;//With added Heat loss every time the temp is checked
+	public double getTemp(Boolean h) {
+		if(h == true && temperature>0) {//IF HEAT LOSS IS ON //ADDED CAPS TO TEMPERATURE 
+			temperature -= 0.01;//With added Heat loss every time the temp is checked
+		}
+		else if(h == false && temperature<35) {//IF HEAT LOSS IS OFF //ADDED CAPS
+			temperature += 0.01;
+		}
+		return temperature;
+	}
+	
+	/**
+	 * Allows Objects to peek at the temperature without any input
+	 * @return
+	 */
+	public double checkTemp() {
 		return temperature;
 	}
 	/**

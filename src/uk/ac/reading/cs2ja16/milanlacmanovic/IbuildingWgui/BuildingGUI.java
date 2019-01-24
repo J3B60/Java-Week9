@@ -5,9 +5,12 @@ import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -33,6 +36,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -46,7 +50,9 @@ import javafx.stage.Stage;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -71,6 +77,7 @@ public class BuildingGUI extends Application {
     private Boolean setPersonPosSwitch = false;//Mouse click the position of Person
     private Boolean setObjectPosSwitch = false;//Mouse click the postion of Object
     ArrayList<Point> graphxy = new ArrayList<Point>();
+    private Boolean HeatLoss = true;
     
 
     long startNanoTime = System.nanoTime();//SYSTEM TIME
@@ -112,7 +119,7 @@ public class BuildingGUI extends Application {
 	 * function to show a Help box for information about using the program
 	 */
 	 private void showHelp() {//TODO
-		 showMessage("Help", "TODO once all options from 'bi' class added");
+		 showMessage("Help", "Press the animate button to start the Building simulation. More info in user manual");
 	 }
  
 	/**
@@ -151,7 +158,7 @@ public class BuildingGUI extends Application {
 		MenuItem mOpen = new MenuItem("Open");
 		mOpen.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
-		        bi.allBuildings.set(bi.CurrentBuildingIndex, new Building(bi.LoadFile()));//Works from old code
+		        bi.LoadFile();//Works from old code
 		    }
 		});
 		MenuItem mSave = new MenuItem("Save");
@@ -160,44 +167,65 @@ public class BuildingGUI extends Application {
 		        bi.SaveFile();//From old code
 		    }
 		});
+		MenuItem mExImage = new MenuItem("Export as Image");
+		mExImage.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	int option;
+				File selectedFile;
+		    	JFileChooser jfc = new JFileChooser();
+				option = jfc.showSaveDialog(null);
+				if (option == JFileChooser.APPROVE_OPTION) {//Check if option is what the JFileChooser has
+					selectedFile = jfc.getSelectedFile(); //Assigns to File type variable 
+				}
+				else {
+					selectedFile = null; //##Bad error handling
+				}
+		    	WritableImage wim = new WritableImage(canvasSize, canvasSize);
+		    	try {ImageIO.write(SwingFXUtils.fromFXImage(gc.getCanvas().snapshot(null, wim),null),"png",selectedFile); //Writes to file
+					
+				} catch (IOException e) {
+					e.printStackTrace();//Error Handling similar to RJM's
+				}
+		    }
+		});
 		MenuItem mExit = new MenuItem("Exit");
 		mExit.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
 		        System.exit(0);						// quit program
 		    }
 		});
-		mFile.getItems().addAll(mNew, mOpen, mSave, mExit);
+		mFile.getItems().addAll(mNew, mOpen, mSave, mExImage, mExit);
 		
 		Menu mView = new Menu("View");
-		MenuItem mGraph = new MenuItem("Graph");
-		MenuItem mBuilding = new MenuItem("Building");
+		//MenuItem mGraph = new MenuItem("Graph");
+		//MenuItem mBuilding = new MenuItem("Building");
 		MenuItem mtoFit = new MenuItem("Fit to Screen");
-		mBuilding.setDisable(true);//For switching Views
-		mGraph.setDisable(false);
-		mBuilding.setDisable(false);
-		mGraph.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent t) {
-		    	//TODO graph FUNCTION goes Here
-		    	mBuilding.setDisable(false);//Switch to Graph View
-		    	mtoFit.setDisable(true);
-		    	mGraph.setDisable(true);
-		    }
-		});
-		mBuilding.setOnAction(new EventHandler<ActionEvent>() {
-		    public void handle(ActionEvent t) {
-		    	//TODO return to Building view FUNCTION goes Here
-		    	mBuilding.setDisable(true);//Switching View to Main Building GUI
-		    	mtoFit.setDisable(false);
-		    	mGraph.setDisable(false);
-		    }
-		});
+		//mBuilding.setDisable(true);//For switching Views//PERMENANTLY DISABLED
+		//mGraph.setDisable(true);//PERMENANTLY DISABLED, have graph in right pane
+		mtoFit.setDisable(false);
+//		mGraph.setOnAction(new EventHandler<ActionEvent>() {
+//		    public void handle(ActionEvent t) {
+//		    	//TODO graph FUNCTION goes Here
+//		    	mBuilding.setDisable(false);//Switch to Graph View
+//		    	mtoFit.setDisable(true);
+//		    	mGraph.setDisable(true);
+//		    }
+//		});
+//		mBuilding.setOnAction(new EventHandler<ActionEvent>() {
+//		    public void handle(ActionEvent t) {
+//		    	//TODO return to Building view FUNCTION goes Here
+//		    	mBuilding.setDisable(true);//Switching View to Main Building GUI
+//		    	mtoFit.setDisable(false);
+//		    	mGraph.setDisable(false);
+//		    }
+//		});
 		mtoFit.setOnAction(new EventHandler<ActionEvent>() {
 		    public void handle(ActionEvent t) {
 //		    	BuildingtoFit();//In-case of future Zoom In, Out Function
 		    	drawIt();
 		    }
 		});
-		mView.getItems().addAll(mBuilding, mGraph, mtoFit);
+		mView.getItems().addAll(mtoFit);
 		
 		Menu mEdit = new Menu("Edit");
 		MenuItem mBuildingSize = new MenuItem("Building Size");
@@ -206,7 +234,24 @@ public class BuildingGUI extends Application {
 		    	bi.UserConfigBuildingSize();//Edit current building size, New code, maybe unstable
 		    }
 		});
-		mEdit.getItems().addAll(mBuildingSize);
+		MenuItem mTempUp = new MenuItem("Heat Gain");
+		MenuItem mTempDown = new MenuItem("Heat Loss");
+		mTempDown.setDisable(true);
+		mTempDown.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	HeatLoss = true;
+		    	mTempDown.setDisable(false);
+		    	mTempUp.setDisable(true);
+		    }
+		});
+		mTempUp.setOnAction(new EventHandler<ActionEvent>() {
+		    public void handle(ActionEvent t) {
+		    	HeatLoss = false;
+		    	mTempDown.setDisable(true);
+		    	mTempUp.setDisable(false);
+		    }
+		});
+		mEdit.getItems().addAll(mBuildingSize, mTempUp, mTempDown);
 		
 		menuBar.getMenus().addAll(mFile, mEdit, mView, mHelp);	// menu has File and Help
 		
@@ -221,7 +266,7 @@ public class BuildingGUI extends Application {
 		rtPane.getChildren().clear();					// clear rtpane
 				// now create label
 		//Need to loop for all items in solar system and add to temp 
-		DateFormat dateFormat = new SimpleDateFormat("dd/mm/yyyy");
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		Date date = new Date();
 		String temp = "";
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i ++) {//Get all info for current building
@@ -253,7 +298,7 @@ public class BuildingGUI extends Application {
 		sGC.strokeLine(minX, maxY, maxX, maxY);//Vertical Axis
 		sGC.strokeLine(minX,minY,minX,maxY);//Horizontal Axis
 		sGC.setStroke(Color.RED);
-		graphxy.add(new Point((int) t%124, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp()));//Mess around with time to get the right combination
+		graphxy.add(new Point((int) t%124, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp(HeatLoss)));//Mess around with time to get the right combination
 		if (graphxy.size() == 499) {
 			Point tempprevious = new Point((int)minX, (int)graphxy.get(graphxy.size()-1).getY());
 			graphxy.clear();
@@ -266,7 +311,7 @@ public class BuildingGUI extends Application {
 		sGC.fillText("Temperature", 80, 10);//Title
 		sGC.fillText("x:Time", canvasX/2,  (canvasY -maxY)/2 + maxY);//X axis Label
 		sGC.setFont(Font.font(14));
-		sGC.fillText(String.valueOf((int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp())+ "\u00b0C", canvasX-40,  (canvasY -maxY)/2 + minY/2);
+		sGC.fillText(String.valueOf((int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp(HeatLoss))+ "\u00b0C", canvasX-40,  (canvasY -maxY)/2 + minY/2);
 		return sC;
 	}
 
@@ -301,7 +346,7 @@ public class BuildingGUI extends Application {
 		if (skyPos == -1440) {
 			skyPos = -360;
 		}
-		skyPos -= 3*(1/120);//Static (t was changed to 5) so that it doesn't rely on t
+		skyPos -= 3*(5/120);//Static (t was changed to 5) so that it doesn't rely on t
 		secondaryGC.drawImage(skyImg, 30, (int) skyPos);
 		ltPane.getChildren().add(Ll);
 		ltPane.getChildren().add(sky);				// add label to pane
@@ -342,14 +387,14 @@ public class BuildingGUI extends Application {
 	 */
 	private Button setAnimateButton() {
 			// create button
-		Button btnBottom = new Button("ERROR");
-				// now add handler
-		if (SetAnimationRun == true) {
-			btnBottom = new Button("Pause");
-		}
-		else {
-			btnBottom = new Button("Animate");
-		}
+		Button btnBottom = new Button("Animate");
+//				// now add handler
+//		if (SetAnimationRun == true) {
+//			btnBottom = new Button("Pause");
+//		}
+//		else {
+//			btnBottom = new Button("Animate");
+//		}
 		btnBottom.setTooltip(new Tooltip("Run Building GUI"));
 		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
@@ -361,7 +406,7 @@ public class BuildingGUI extends Application {
 //    					drawIt();
 //    				}
 //				}
-				SetAnimationRun = !SetAnimationRun;
+				SetAnimationRun = true;
 					// and its action to draw earth at random angle
 			}
 		});
@@ -371,19 +416,19 @@ public class BuildingGUI extends Application {
 	 * Pauses Animation
 	 * @return
 	 */
-//	private Button setPauseButton() {
-//		// create button
-//	Button btnBottom = new Button("Pause");
-//			// now add handler
-//	btnBottom.setTooltip(new Tooltip("Pause Animation"));
-//	btnBottom.setOnAction(new EventHandler<ActionEvent>() {
-//		@Override
-//		public void handle(ActionEvent event) {
-//			SetAnimationRun = false;
-//		}
-//	});
-//	return btnBottom;
-//}
+	private Button setPauseButton() {
+		// create button
+		Button btnBottom = new Button("Pause");
+				// now add handler
+		btnBottom.setTooltip(new Tooltip("Pause Animation"));
+		btnBottom.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent event) {
+				SetAnimationRun = false;
+			}
+		});
+		return btnBottom;
+	}
 	
 //	private Button setPauseButton() {
 //		// create button
@@ -716,7 +761,7 @@ public class BuildingGUI extends Application {
 	private void setBottomButtons(){
 		btPane.getChildren().clear();
 		btPane.getChildren().add(setAnimateButton());
-//		btPane.getChildren().add(setPauseButton());
+		btPane.getChildren().add(setPauseButton());
 		
 	}
 	/**
@@ -724,7 +769,7 @@ public class BuildingGUI extends Application {
 	 */
 	@Override
 	public void start(Stage stagePrimary) throws Exception {
-		graphxy.add(new Point((int) t%90, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp()));
+		graphxy.add(new Point((int) t%90, (int) bi.allBuildings.get(bi.getCurrentBuildingIndex()).getTemp(HeatLoss)));
 		StackPane holder = new StackPane();
 		stagePrimary.setTitle("Intelligent Building");
 		BorderPane bp = new BorderPane();

@@ -7,11 +7,18 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class LightBulb extends BuildingObject {
-	LightBulb(){
+//	LightBulb(){
+//		objectID++;//ToTest
+//		objectImage = new Image(getClass().getResourceAsStream("Light-bulb.png"));
+//		objectName = "Light Bulb - " + String.valueOf(objectID);
+//		objectPosition = new Point(9,5);//CURRENT DEFAULT FOR NOW
+//	}
+	
+	LightBulb(Point Random){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("Light-bulb.png"));
 		objectName = "Light Bulb - " + String.valueOf(objectID);
-		objectPosition = new Point(9,5);//CURRENT DEFAULT FOR NOW
+		objectPosition = Random;//CURRENT DEFAULT FOR NOW
 	}
 	
 	public void presentGUI(BuildingGUI bg) {
@@ -69,7 +76,7 @@ public class LightBulb extends BuildingObject {
 	}
 
 	@Override
-	public void check(Building b) {
+	public void check(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}

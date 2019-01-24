@@ -6,11 +6,18 @@ import javafx.scene.image.Image;
 
 public class Heater extends BuildingObject {
 	private double sourceTemp = 25; 
-	Heater(){
+//	Heater(){
+//		objectID++;//ToTest
+//		objectImage = new Image(getClass().getResourceAsStream("Radiator.jpg"));
+//		objectName = "Radiator - " + String.valueOf(objectID);
+//		objectPosition = new Point(9,5);//CURRENT DEFAULT FOR NOW
+//	}
+	
+	Heater(Point Random){
 		objectID++;//ToTest
-		objectImage = new Image(getClass().getResourceAsStream("Radiator.jpg"));
-		objectName = "Radiator - " + String.valueOf(objectID);
-		objectPosition = new Point(9,5);//CURRENT DEFAULT FOR NOW
+		objectImage = new Image(getClass().getResourceAsStream("Heater.png"));
+		objectName = "Heater - " + String.valueOf(objectID);
+		objectPosition = Random;//CURRENT DEFAULT FOR NOW
 	}
 	
 	public void presentGUI(BuildingGUI bg) {
@@ -66,9 +73,9 @@ public class Heater extends BuildingObject {
 	}
 
 	@Override
-	public void check(Building b) {//Replace Activate too
-		if (b.getTemp() < 23) {
-			b.changeTemp(sourceTemp);
+	public void check(BuildingInterface bi) {//Replace Activate too
+		if (bi.allBuildings.get(bi.getCurrentBuildingIndex()).checkTemp() < 23) {
+			bi.allBuildings.get(bi.getCurrentBuildingIndex()).changeTemp(sourceTemp);
 		}
 	}
 

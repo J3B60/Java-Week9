@@ -7,11 +7,18 @@ import javafx.scene.image.Image;
 public class SmokeDetector extends BuildingObject {
 	
 	
-	SmokeDetector(){
+//	SmokeDetector(){
+//		objectID++;//ToTest
+//		objectImage = new Image(getClass().getResourceAsStream("Smoke-Detector.png"));
+//		objectName = "Smoke Detector - " + String.valueOf(objectID);
+//		objectPosition = new Point(2,8);//CURRENT DEFAULT FOR NOW
+//	}
+	
+	SmokeDetector(Point Random){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("Smoke-Detector.png"));
 		objectName = "Smoke Detector - " + String.valueOf(objectID);
-		objectPosition = new Point(2,8);//CURRENT DEFAULT FOR NOW
+		objectPosition = Random;//CURRENT DEFAULT FOR NOW
 	}
 	
 	public void presentGUI(BuildingGUI bg){
@@ -68,7 +75,7 @@ public class SmokeDetector extends BuildingObject {
 	}
 
 	@Override
-	public void check(Building b) {
+	public void check(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -92,5 +92,5 @@ public abstract class BuildingObject {
 	
 	abstract public void Activate();
 	
-	abstract public void check(Building b);
+	abstract public void check(BuildingInterface bi);
 }

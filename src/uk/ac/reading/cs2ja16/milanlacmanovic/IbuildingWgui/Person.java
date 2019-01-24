@@ -130,7 +130,7 @@ public class Person {
 		int dx = 0, dy = 0;
 		int movex = 0, movey =0;
 		if(index < PointPath.size()) {//If more points to visit continue else finished
-			if (PersonPosition.getX() != PointPath.get(index).getX() && PersonPosition.getY() != PointPath.get(index).getY() ) {
+			if (PersonPosition.getX() != PointPath.get(index).getX() || PersonPosition.getY() != PointPath.get(index).getY() ) {
 				dx = (int) PersonPosition.getX() - (int) PointPath.get(index).getX();
 				dy = (int) PersonPosition.getY() - (int) PointPath.get(index).getY();
 				//Checks if space is empty to move into however diagonals screw it up, checks are only 

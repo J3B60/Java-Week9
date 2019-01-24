@@ -6,11 +6,18 @@ import javafx.scene.image.Image;
 
 public class AirConditioner extends BuildingObject{
 	private double sourceTemp = 20;
-	AirConditioner(){
+//	AirConditioner(){//Should not be used
+//		objectID++;//ToTest
+//		objectImage = new Image(getClass().getResourceAsStream("air-conditioned.png"));
+//		objectName = "Air Conditioner - " + String.valueOf(objectID);
+//		objectPosition = new Point(3,1);//CURRENT DEFAULT FOR NOW
+//	}
+	
+	AirConditioner(Point Random){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("air-conditioned.png"));
 		objectName = "Air Conditioner - " + String.valueOf(objectID);
-		objectPosition = new Point(3,1);//CURRENT DEFAULT FOR NOW
+		objectPosition = Random;//CURRENT DEFAULT FOR NOW
 	}
 	
 	public void presentGUI(BuildingGUI bg) {
@@ -64,9 +71,9 @@ public class AirConditioner extends BuildingObject{
 	}
 
 	@Override
-	public void check(Building b) {//Replace Activate too
-		if (b.getTemp() > 29) {
-			b.changeTemp(sourceTemp);
+	public void check(BuildingInterface bi) {//Replace Activate too
+		if (bi.allBuildings.get(bi.getCurrentBuildingIndex()).checkTemp() > 20) {
+			bi.allBuildings.get(bi.getCurrentBuildingIndex()).changeTemp(sourceTemp);
 		}
 	}
 }

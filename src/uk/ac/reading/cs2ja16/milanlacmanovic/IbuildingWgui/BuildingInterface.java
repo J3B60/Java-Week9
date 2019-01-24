@@ -38,7 +38,7 @@ public class BuildingInterface {
 		if (bOpt == 1) {
 			//return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
 			//return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6";//building size can be same size as max room coord dimensions
-			return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6\n40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";//building size can be same size as max room coord dimensions
+			return "10 10;0 0 4 4 2 4;6 0 10 10 6 5;0 6 4 10 2 6B40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";//building size can be same size as max room coord dimensions
 		}
 		else {
 			return "40 12;0 0 15 4 8 4;15 0 30 4 22 4;0 6 10 11 6 6";
@@ -68,7 +68,7 @@ public class BuildingInterface {
 	    int bno = 1;			// initially building 1 selected
 	    allBuildings = new ArrayList<Building>();
 	    allBuildings.clear();
-	    StringSplitter S = new StringSplitter(buildingString(bno), "\n");//Multi building save
+	    StringSplitter S = new StringSplitter(buildingString(bno), "B");//Multi building save
 	    for(int i = 0; i < S.getStrings().length; i++) {
 	    	allBuildings.add(new Building(S.getStrings()[i]));// create building
 	    }
@@ -281,9 +281,12 @@ public class BuildingInterface {
 	 * User inputs new Building using the Building string format
 	 * @return
 	 */
-	public String UserInputBuilding() {
+	public void UserInputBuilding() {
 		String userIn = JOptionPane.showInputDialog(null, "Enter Building using format [Bx By; R1x1 R1y1 R1x2 R1y2 R1Dx R1Dy; ...]");
-		return userIn;
+		StringSplitter S = new StringSplitter(userIn, "B");
+		for (int i = 0; i < S.getStrings().length; i++) {
+			allBuildings.add(new Building(S.getStrings()[i]));
+		}
 	}
 	/**
 	 * User configured building size, keeping the original contents inside, has a check that its not smaller than rooms or cutting rooms out
@@ -325,9 +328,9 @@ public class BuildingInterface {
 		try (PrintWriter out = new PrintWriter(selectedFile)) {//Writes to file
 				String temp = "";
 				for (int i = 0; i < allBuildings.size(); i++) {
-					temp += allBuildings.get(i).getOriginalInput() + "\n";
+					temp += allBuildings.get(i).getOriginalInput() + "B";
 				}
-				temp = temp.substring(0, temp.length()-2);//Takes of last two characters because of extra \n
+				temp = temp.substring(0, temp.length()-1);//Takes of last two characters because of extra B
 				out.println(temp);//Writes the Original Input from Building
 				out.close();
 		} catch (FileNotFoundException e) {
@@ -341,7 +344,7 @@ public class BuildingInterface {
 	 * @return LoadFile
 	 */
 	
-	public String LoadFile() {
+	public void LoadFile() {
 		int option;
 		File selectedFile;
 		JFileChooser jfc = new JFileChooser();
@@ -364,12 +367,11 @@ public class BuildingInterface {
 			e.printStackTrace(); //Simple error handling similar to RJM's for the animate
 		}
 		/////////////////Make new building
-		StringSplitter S = new StringSplitter(temp, "\n");//Multi building save
+		StringSplitter S = new StringSplitter(temp, "B");//Multi building save
 	    for(int i = 0; i < S.getStrings().length; i++) {
 	    	allBuildings.add(new Building(S.getStrings()[i]));// create building
 	    }
 		//////////////
-		return temp;
 	}
 	/**
 	 * Getter for all Building Rooms
@@ -464,21 +466,23 @@ public void delRoom() {
  * add a new building, sets up the default building for new building
  */
 public void  addFloor() {
-	allBuildings.add(new Building(buildingString(1)));
+	//STRING SPLITTER
+	StringSplitter S = new StringSplitter(buildingString(1), "B");//Same as initialiser - can be moved into a seperate function to be easier
+	allBuildings.add(new Building(S.getStrings()[0]));//ADDS THE FIRST ORIGINAL BUILDING
 }
 /**
  * Delete a specified building or floor, with major warnings to prevent accidental data loss
  */
 public void delFloor() {
 	String userIn = JOptionPane.showInputDialog(null, "Enter Building Number");
-	int valueIn = JOptionPane.showConfirmDialog(null, null, "Warning: This will delete all items on floor", JOptionPane.OK_CANCEL_OPTION);
+	int valueIn = JOptionPane.showConfirmDialog(null, "This will delete all items on floor", "Warning:", JOptionPane.OK_CANCEL_OPTION);
 	if (valueIn == JOptionPane.OK_OPTION) {
-		if (Integer.parseInt(userIn) -1 < allBuildings.size()) {
-			CurrentBuildingIndex -= 1;
+		if (Integer.parseInt(userIn) -1 < allBuildings.size() && Integer.parseInt(userIn) >= 1 && allBuildings.size()-1 >= 1) {
+			if (CurrentBuildingIndex != 0)CurrentBuildingIndex -= 1;
 			allBuildings.remove(Integer.parseInt(userIn) -1); //Input based on building info (offset by one for arrays)
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "Building does not exist, please enter valid Building Number", "Error",  JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Building does not exist/cannot be deleted, please enter valid Building Number", "Error",  JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

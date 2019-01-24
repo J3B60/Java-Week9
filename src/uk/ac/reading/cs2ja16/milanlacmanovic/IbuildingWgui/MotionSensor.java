@@ -6,11 +6,18 @@ import javafx.scene.image.Image;
 
 public class MotionSensor extends BuildingObject{
 //	private Boolean powerSwitch = false;
-	MotionSensor(){
+//	MotionSensor(){
+//		objectID++;//ToTest
+//		objectImage = new Image(getClass().getResourceAsStream("motiondetect.png"));
+//		objectName = "Motion Detector - " + String.valueOf(objectID);
+//		objectPosition = new Point(7,5);//CURRENT DEFAULT FOR NOW
+//	}
+	
+	MotionSensor(Point Random){
 		objectID++;//ToTest
 		objectImage = new Image(getClass().getResourceAsStream("motiondetect.png"));
 		objectName = "Motion Detector - " + String.valueOf(objectID);
-		objectPosition = new Point(7,5);//CURRENT DEFAULT FOR NOW
+		objectPosition = Random;//CURRENT DEFAULT FOR NOW
 	}
 	
 	public void presentGUI(BuildingGUI bg) {
@@ -80,7 +87,7 @@ public class MotionSensor extends BuildingObject{
 	}
 
 	@Override
-	public void check(Building b) {
+	public void check(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}

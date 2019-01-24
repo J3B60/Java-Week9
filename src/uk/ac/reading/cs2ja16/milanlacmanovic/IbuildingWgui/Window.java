@@ -6,11 +6,18 @@ import javafx.scene.image.Image;
 
 public class Window extends BuildingObject {
 
-	Window(){
+//	Window(){
+//		objectID++;//ToTest
+//		//NO IMAGE make it a blue line
+//		objectName = "Window - " + String.valueOf(objectID);
+//		objectPosition = new Point(7,1);//CURRENT DEFAULT FOR NOWb
+//	}
+	
+	Window(Point Random){
 		objectID++;//ToTest
 		//NO IMAGE make it a blue line
 		objectName = "Window - " + String.valueOf(objectID);
-		objectPosition = new Point(7,1);//CURRENT DEFAULT FOR NOWb
+		objectPosition = Random;//CURRENT DEFAULT FOR NOWb
 	}
 	
 	public void presentGUI(BuildingGUI bg) {
@@ -68,7 +75,7 @@ public class Window extends BuildingObject {
 	}
 
 	@Override
-	public void check(Building b) {
+	public void check(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}
