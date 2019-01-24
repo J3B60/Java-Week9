@@ -26,6 +26,9 @@ public class Lift extends BuildingObject {
 	public void presentGUI(BuildingGUI bg) {
 		bg.drawObject(getImage(), getXPosition(), getYPosition());	
 	}
+	
+	public void DrawInGUI(BuildingGUI bg) {	
+	}
 
 	public int getID(){
 		return objectID;
@@ -73,13 +76,13 @@ public class Lift extends BuildingObject {
 	}
 
 	@Override
-	public void Activate() {
+	public void Activate(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void check(BuildingInterface bi) {
+	public void check(BuildingInterface bi) {//check and lift
 		int PersonNumber = -1;
 		int ULiftindex = -1;
 		int DLiftindex = -1;

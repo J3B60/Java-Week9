@@ -29,10 +29,15 @@ public abstract class BuildingObject {
 	 */
 	protected Point objectPosition;
 	/**
-	 * Draw to main Canvas
+	 * Draw to main Canvas the object
 	 * @param bg
 	 */
 	abstract public void presentGUI(BuildingGUI bg);
+	/**
+	 * Draw to main Canvas other artifacts
+	 * @param bg
+	 */
+	abstract public void DrawInGUI(BuildingGUI bg);
 	/**
 	 * Return objectID
 	 * @return objectID
@@ -89,8 +94,14 @@ public abstract class BuildingObject {
 	 * @return object Room 
 	 */
 	abstract public int objectInRoom(Building myBuilding);
-	
-	abstract public void Activate();
-	
+	/**
+	 * triggered by other objects
+	 * @param bi
+	 */
+	abstract public void Activate(BuildingInterface bi);
+	/**
+	 * triggered by specified situtations in building
+	 * @param bi
+	 */
 	abstract public void check(BuildingInterface bi);
 }

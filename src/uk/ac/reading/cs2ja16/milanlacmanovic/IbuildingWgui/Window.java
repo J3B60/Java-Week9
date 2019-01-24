@@ -23,6 +23,9 @@ public class Window extends BuildingObject {
 	public void presentGUI(BuildingGUI bg) {
 		bg.drawObject(getImage(), getXPosition(), getYPosition());	
 	}
+	
+	public void DrawInGUI(BuildingGUI bg) {	
+	}
 
 	public int getID(){
 		return objectID;
@@ -69,7 +72,7 @@ public class Window extends BuildingObject {
 	//Day -> then Light in Room
 
 	@Override
-	public void Activate() {
+	public void Activate(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}

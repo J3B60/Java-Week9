@@ -87,6 +87,11 @@ public class BuildingGUI extends Application {
 	public void drawIt () {//Draw all required items to main Building GUI
 		gc.clearRect(0,  0,  canvasSize,  canvasSize);//Initialise
 		bi.doDisplay();
+		//Draw room colour
+		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().size(); i++) {
+			bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllBuildingObjects().get(i).DrawInGUI(this);
+		}
+		
 		drawLines(gc);//Building & Room Lines
 		for (int i = 0; i < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().size(); i++) {//Draw all People
 			bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(i).showPersonGUI(this);
@@ -993,10 +998,10 @@ public class BuildingGUI extends Application {
 		return canvasSize;
 	}
 	
-	public void changeRoomColour(int[] x){
+	public void changeRoomColour(int x, int y, int w, int h){
 		double ratio = BuildingtoFit();
 		gc.setFill(Color.YELLOW);
-		gc.fillRect(x[0]*ratio, x[1]*ratio, x[2]*ratio, x[3]*ratio);
+		gc.fillRect((x+1)*ratio, (y+1)*ratio, (w+1)*ratio, (h+1)*ratio);
 	}
 	
 	/**

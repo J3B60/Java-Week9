@@ -13,6 +13,7 @@ public class LightBulb extends BuildingObject {
 //		objectName = "Light Bulb - " + String.valueOf(objectID);
 //		objectPosition = new Point(9,5);//CURRENT DEFAULT FOR NOW
 //	}
+	int[] RoomDim = new int[] {-1,-1,-1,-1};
 	
 	LightBulb(Point Random){
 		objectID++;//ToTest
@@ -22,9 +23,13 @@ public class LightBulb extends BuildingObject {
 	}
 	
 	public void presentGUI(BuildingGUI bg) {
-		bg.drawObject(getImage(), getXPosition(), getYPosition());	
+		bg.drawObject(getImage(), getXPosition(), getYPosition());
 	}
 
+	public void DrawInGUI(BuildingGUI bg) {	//DRAW LIGHT
+		bg.changeRoomColour(RoomDim[0], RoomDim[1], RoomDim[2], RoomDim[3]);
+	}
+	
 	public int getID(){
 		return objectID;
 	}
@@ -67,19 +72,16 @@ public class LightBulb extends BuildingObject {
 		return -1; //If not found then return -1
 	}
 	private void drawLight(BuildingInterface bi) {
-		bi.changeRoomColour(bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[0], bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[1], bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[2], bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords()[3]);
+		RoomDim = bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(objectInRoom(bi.allBuildings.get(bi.getCurrentBuildingIndex()))).getDoorCoords();
 		//bg.gc.fillRect(myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[0], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[1], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[2], myBuilding.getAllRooms().get(objectInRoom(myBuilding)).getDoorCoords()[3]);
 		//NEED TO ADD slightly off centre because of line thickness, NEED RATIO bg.getRatio()
 	}
-	public void Activate(){
-		//drawLight();
+	public void Activate(BuildingInterface bi){
+		drawLight(bi);
 	}
 
 	@Override
 	public void check(BuildingInterface bi) {
-		if (true/*####*/) {
-			drawLight(bi);
-		}
 		
 	}
 }

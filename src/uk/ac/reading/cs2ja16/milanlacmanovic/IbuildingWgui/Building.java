@@ -29,6 +29,7 @@ public class Building {
 //	public BuildingObject aircon;//Temo
 	private ArrayList<Person> allPeople;
 	private double temperature = 17;
+	private Boolean ActivateObjectsSwitch = false;
 	
 	/**
 	 * Building Constructor which initialises the Rooms arraylist, Random generator
@@ -184,6 +185,7 @@ public class Building {
 			if (allPeople.get(i).movePerson(bi)) nextPathPoint(i);//tell Person class to move and the person can know how to move because it has BuildngDraw
 			for (int j = 0; j < allBuildingObjects.size(); j++) {//Check all items to activate
 				allBuildingObjects.get(j).check(bi);
+				if (ActivateObjectsSwitch)allBuildingObjects.get(j).Activate(bi);
 			}
 		}
 	}
@@ -432,6 +434,14 @@ public class Building {
 	 */
 	public double checkTemp() {
 		return temperature;
+	}
+	
+	public void activate() {
+		ActivateObjectsSwitch = true;
+	}
+	
+	public void deactivate() {
+		ActivateObjectsSwitch = false;
 	}
 	/**
 	 * Building test main

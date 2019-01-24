@@ -24,6 +24,9 @@ public class Heater extends BuildingObject {
 		bg.drawObject(getImage(), getXPosition(), getYPosition());	
 	}
 
+	public void DrawInGUI(BuildingGUI bg) {	
+	}
+	
 	public int getID(){
 		return objectID;
 	}
@@ -67,7 +70,7 @@ public class Heater extends BuildingObject {
 	}
 
 	@Override
-	public void Activate() {
+	public void Activate(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -24,6 +24,10 @@ public class SmokeDetector extends BuildingObject {
 	public void presentGUI(BuildingGUI bg){
 		bg.drawObject(getImage(), getXPosition(), getYPosition());
 	}
+	
+	public void DrawInGUI(BuildingGUI bg) {	
+	}
+	
 	public int getID(){
 		return objectID;
 	}
@@ -70,7 +74,7 @@ public class SmokeDetector extends BuildingObject {
 		}
 		return -1; //If not found then return -1
 	}
-	public void Activate(){
+	public void Activate(BuildingInterface bi){
 		
 	}
 

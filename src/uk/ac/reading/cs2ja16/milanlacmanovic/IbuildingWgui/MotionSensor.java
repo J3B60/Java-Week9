@@ -24,6 +24,9 @@ public class MotionSensor extends BuildingObject{
 		bg.drawObject(getImage(), getXPosition(), getYPosition());	
 	}
 
+	public void DrawInGUI(BuildingGUI bg) {	
+	}
+	
 	public int getID(){
 		return objectID;
 	}
@@ -70,26 +73,35 @@ public class MotionSensor extends BuildingObject{
 	 * If person is in the same room as Motion Sensor then turn ON sensor else OFF
 	 * @param myBuilding - Passed to get rooms and person
 	 */
-	private void sense(Building myBuilding) {
-		for (int i = 0; i < myBuilding.getAllPeople().size(); i++) {
-			if (myBuilding.PersonInRoom(i) == objectInRoom(myBuilding)){
-				for (int j = 0; j < myBuilding.getAllBuildingObjects().size(); j++){
-					myBuilding.getAllBuildingObjects().get(j).Activate();
-				}
-			}
-		}
-	}
+//	private void sense(Building myBuilding) {
+//		for (int i = 0; i < myBuilding.getAllPeople().size(); i++) {
+//			if (myBuilding.PersonInRoom(i) == objectInRoom(myBuilding)){
+//				for (int j = 0; j < myBuilding.getAllBuildingObjects().size(); j++){
+//					myBuilding.getAllBuildingObjects().get(j).Activate();
+//				}
+//			}
+//		}
+//	}
 
 	@Override
-	public void Activate() {
+	public void Activate(BuildingInterface bi) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void check(BuildingInterface bi) {
-		for (int index = 0; index < bi.allBuildings.get(bi.getCurrentBuildingIndex()); index++
-		bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().get(index)
+		for (int index = 0; index < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllPeople().size(); index++) {
+			for (int j = 0; j < bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().size(); j++) {
+				if (bi.allBuildings.get(bi.getCurrentBuildingIndex()).getAllRooms().get(j).isInRoom(objectPosition) && bi.allBuildings.get(bi.getCurrentBuildingIndex()).PersonInRoom(index) == j+1) {
+					bi.allBuildings.get(bi.getCurrentBuildingIndex()).activate();
+				}
+				else {
+					bi.allBuildings.get(bi.getCurrentBuildingIndex()).deactivate();
+				}
+			}
+		}
+		
 		
 	}
 	

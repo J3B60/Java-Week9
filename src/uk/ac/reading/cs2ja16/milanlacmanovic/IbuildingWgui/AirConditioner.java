@@ -23,6 +23,9 @@ public class AirConditioner extends BuildingObject{
 	public void presentGUI(BuildingGUI bg) {
 		bg.drawObject(getImage(), getXPosition(), getYPosition());	
 	}
+	
+	public void DrawInGUI(BuildingGUI bg) {	
+	}
 
 	public int getID(){
 		return objectID;
@@ -67,7 +70,7 @@ public class AirConditioner extends BuildingObject{
 	}
 
 	@Override
-	public void Activate() {	
+	public void Activate(BuildingInterface bi) {	
 	}
 
 	@Override
